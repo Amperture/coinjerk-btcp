@@ -17,6 +17,7 @@ class Invoice(db.Model):
 
     # status holds valid values "paid", "unpaid", "expired"
     status = db.Column(db.Integer)
+    btcpay_invoice_id = db.Column(db.String(64))
 
     message = db.Column(db.String(255))
     email = db.Column(db.String(255))
@@ -28,14 +29,16 @@ class Invoice(db.Model):
     '''
 
 
-class BTCPayClient(db.Model):
+class BTCPayClientConnector(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     client = db.Column(db.PickleType)
+
     '''
     user: one-to-one User
     '''
 
 
-class StreamElementsIntegration(db.Model):
+class StreamElementsConnector(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jwt = db.Column(db.String(1024))
+    channel_id = db.Column(db.String(64))
