@@ -5,8 +5,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     username = db.Column(db.String(64), unique=True)
+    invoices = db.relationship(
+            'Invoice',
+            backref='user',
+            lazy=True
+            )
     '''
-    TODO: invoices: one-to-many Invoice objects
     TODO: client: one-to-one BTCPayClient
     TODO: integration: one-to-??? StreamElements/StreamLabs
     '''
@@ -23,9 +27,11 @@ class Invoice(db.Model):
     email = db.Column(db.String(255))
     username = db.Column(db.String(255))
 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')
+
+
     '''
     TODO: client, many-to-one BTCPayClient
-    TODO: user, many-to-one
     '''
 
 
