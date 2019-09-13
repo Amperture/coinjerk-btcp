@@ -1,142 +1,131 @@
 <template>
-  <v-container>
-    <v-layout
-      text-center
-      wrap
+  <v-app id="sandbox">
+    <v-navigation-drawer
+      v-model="primaryDrawer.model"
+      :clipped="primaryDrawer.clipped"
+      :floating="primaryDrawer.floating"
+      :mini-variant="primaryDrawer.mini"
+      :permanent="primaryDrawer.type === 'permanent'"
+      :temporary="primaryDrawer.type === 'temporary'"
+      app
+      overflow
+    ></v-navigation-drawer>
+
+    <v-app-bar
+      :clipped-left="primaryDrawer.clipped"
+      app
     >
-      <v-flex xs12>
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        ></v-img>
-      </v-flex>
+      <v-app-bar-nav-icon
+        v-if="primaryDrawer.type !== 'permanent'"
+        @click.stop="primaryDrawer.model = !primaryDrawer.model"
+      ></v-app-bar-nav-icon>
+      <v-toolbar-title>Vuetify</v-toolbar-title>
+    </v-app-bar>
 
-      <v-flex mb-4>
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a href="https://community.vuetifyjs.com" target="_blank">Discord Community</a>
-        </p>
-      </v-flex>
+    <v-content>
+      <v-container fluid>
+        <v-row
+          align="center"
+          justify="center"
+        >
+          <v-col cols="10">
+            <v-card>
+              <v-card-text>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <span>Scheme</span>
+                    <v-switch
+                      v-model="$vuetify.theme.dark"
+                      primary
+                      label="Dark"
+                    ></v-switch>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <span>Drawer</span>
+                    <v-radio-group
+                      v-model="primaryDrawer.type"
+                      column
+                    >
+                      <v-radio
+                        v-for="drawer in drawers"
+                        :key="drawer"
+                        :label="drawer"
+                        :value="drawer.toLowerCase()"
+                        primary
+                      ></v-radio>
+                    </v-radio-group>
+                    <v-switch
+                      v-model="primaryDrawer.clipped"
+                      label="Clipped"
+                      primary
+                    ></v-switch>
+                    <v-switch
+                      v-model="primaryDrawer.floating"
+                      label="Floating"
+                      primary
+                    ></v-switch>
+                    <v-switch
+                      v-model="primaryDrawer.mini"
+                      label="Mini"
+                      primary
+                    ></v-switch>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    md="6"
+                  >
+                    <span>Footer</span>
+                    <v-switch
+                      v-model="footer.inset"
+                      label="Inset"
+                      primary
+                    ></v-switch>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <div class="flex-grow-1"></div>
+                <v-btn text>Cancel</v-btn>
+                <v-btn
+                  text
+                  color="primary"
+                >Submit</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-content>
 
-      <v-flex
-        mb-5
-        xs12
-      >
-        <h2 class="headline font-weight-bold mb-3">What's next?</h2>
-
-        <v-layout justify-center>
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-layout>
-      </v-flex>
-
-      <v-flex
-        xs12
-        mb-5
-      >
-        <h2 class="headline font-weight-bold mb-3">Important Links</h2>
-
-        <v-layout justify-center>
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-layout>
-      </v-flex>
-
-      <v-flex
-        xs12
-        mb-5
-      >
-        <h2 class="headline font-weight-bold mb-3">Ecosystem</h2>
-
-        <v-layout justify-center>
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-layout>
-      </v-flex>
-    </v-layout>
-  </v-container>
+    <v-footer
+      :inset="footer.inset"
+      app
+    >
+      <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
-export default {
-  data: () => ({
-    ecosystem: [
-      {
-        text: 'vuetify-loader',
-        href: 'https://github.com/vuetifyjs/vuetify-loader',
+  export default {
+    data: () => ({
+      drawers: ['Default (no property)', 'Permanent', 'Temporary'],
+      primaryDrawer: {
+        model: null,
+        type: 'default (no property)',
+        clipped: false,
+        floating: false,
+        mini: false,
       },
-      {
-        text: 'github',
-        href: 'https://github.com/vuetifyjs/vuetify',
+      footer: {
+        inset: false,
       },
-      {
-        text: 'awesome-vuetify',
-        href: 'https://github.com/vuetifyjs/awesome-vuetify',
-      },
-    ],
-    importantLinks: [
-      {
-        text: 'Documentation',
-        href: 'https://vuetifyjs.com',
-      },
-      {
-        text: 'Chat',
-        href: 'https://community.vuetifyjs.com',
-      },
-      {
-        text: 'Made with Vuetify',
-        href: 'https://madewithvuejs.com/vuetify',
-      },
-      {
-        text: 'Twitter',
-        href: 'https://twitter.com/vuetifyjs',
-      },
-      {
-        text: 'Articles',
-        href: 'https://medium.com/vuetify',
-      },
-    ],
-    whatsNext: [
-      {
-        text: 'Explore components',
-        href: 'https://vuetifyjs.com/components/api-explorer',
-      },
-      {
-        text: 'Select a layout',
-        href: 'https://vuetifyjs.com/layout/pre-defined',
-      },
-      {
-        text: 'Frequently Asked Questions',
-        href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-      },
-    ],
-  }),
-};
+    }),
+  }
 </script>
