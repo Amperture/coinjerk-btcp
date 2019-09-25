@@ -9,10 +9,14 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "v-currency-field": "git+https://github.com/phiny1/v-currency-field.git",
     "vue": "^2.6.10",
-    "vuetify": "^2.0.0"
+    "vue-router": "^3.0.3",
+    "vuetify": "^2.0.0",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@mdi/font": "^4.4.95",
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-service": "^3.11.0",

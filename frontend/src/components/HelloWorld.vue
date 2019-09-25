@@ -1,131 +1,83 @@
 <template>
-  <v-app id="sandbox">
+  <v-app id="inspire">
     <v-navigation-drawer
-      v-model="primaryDrawer.model"
-      :clipped="primaryDrawer.clipped"
-      :floating="primaryDrawer.floating"
-      :mini-variant="primaryDrawer.mini"
-      :permanent="primaryDrawer.type === 'permanent'"
-      :temporary="primaryDrawer.type === 'temporary'"
+      v-model="drawer"
       app
-      overflow
-    ></v-navigation-drawer>
+      clipped
+    >
+      <v-list dense>
+        <v-list-item >
+          <v-list-item-action>
+            <v-icon>mdi-view-dashboard</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Dashboard</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item >
+          <v-list-item-action>
+            <v-icon>mdi-settings</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Settings</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
     <v-app-bar
-      :clipped-left="primaryDrawer.clipped"
       app
+      clipped-left
     >
-      <v-app-bar-nav-icon
-        v-if="primaryDrawer.type !== 'permanent'"
-        @click.stop="primaryDrawer.model = !primaryDrawer.model"
-      ></v-app-bar-nav-icon>
-      <v-toolbar-title>Vuetify</v-toolbar-title>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>Application</v-toolbar-title>
     </v-app-bar>
 
     <v-content>
-      <v-container fluid>
+      <v-container
+        class="fill-height"
+        fluid
+      >
         <v-row
           align="center"
           justify="center"
         >
-          <v-col cols="10">
-            <v-card>
-              <v-card-text>
-                <v-row>
-                  <v-col
-                    cols="12"
-                    md="6"
-                  >
-                    <span>Scheme</span>
-                    <v-switch
-                      v-model="$vuetify.theme.dark"
-                      primary
-                      label="Dark"
-                    ></v-switch>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="6"
-                  >
-                    <span>Drawer</span>
-                    <v-radio-group
-                      v-model="primaryDrawer.type"
-                      column
-                    >
-                      <v-radio
-                        v-for="drawer in drawers"
-                        :key="drawer"
-                        :label="drawer"
-                        :value="drawer.toLowerCase()"
-                        primary
-                      ></v-radio>
-                    </v-radio-group>
-                    <v-switch
-                      v-model="primaryDrawer.clipped"
-                      label="Clipped"
-                      primary
-                    ></v-switch>
-                    <v-switch
-                      v-model="primaryDrawer.floating"
-                      label="Floating"
-                      primary
-                    ></v-switch>
-                    <v-switch
-                      v-model="primaryDrawer.mini"
-                      label="Mini"
-                      primary
-                    ></v-switch>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="6"
-                  >
-                    <span>Footer</span>
-                    <v-switch
-                      v-model="footer.inset"
-                      label="Inset"
-                      primary
-                    ></v-switch>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-actions>
-                <div class="flex-grow-1"></div>
-                <v-btn text>Cancel</v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                >Submit</v-btn>
-              </v-card-actions>
-            </v-card>
+          <v-col
+            cols="12"
+            sm="8"
+            md="4"
+          >
+            <TipFormCard/>
           </v-col>
         </v-row>
       </v-container>
     </v-content>
 
-    <v-footer
-      :inset="footer.inset"
-      app
-    >
-      <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
+    <v-footer app>
+      <span>&copy; 2019</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
+  import TipFormCard from './TipFormCard.vue'
+
   export default {
+    props: {
+      source: String,
+    },
+
+    components: {
+      TipFormCard,
+    },
+
     data: () => ({
-      drawers: ['Default (no property)', 'Permanent', 'Temporary'],
-      primaryDrawer: {
-        model: null,
-        type: 'default (no property)',
-        clipped: false,
-        floating: false,
-        mini: false,
-      },
-      footer: {
-        inset: false,
-      },
+      drawer: null,
     }),
+
+    created () {
+      this.$vuetify.theme.dark = true
+    },
   }
 </script>
+
