@@ -1,22 +1,30 @@
 from app import app, db  # noqa: F401
+from werkzeug.security import generate_password_hash, check_password_hash
 import enum
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
-    username = db.Column(db.String(64), unique=True)
+    username = db.Column(db.String(64), unique=True, nullable=False)
+
+    email = db.Column(db.String(128), unique=True, nullable=False)
+
+    password = db.Column(db.String(255), nullable=False)
+
     invoices = db.relationship(
             'Invoice',
             backref='user',
             lazy=True
             )
+
     btcp_client_connector = db.relationship(
             'BTCPayClientConnector',
             backref='user',
             lazy=True,
             uselist=False,
             )
+
     streamelements_connector = db.relationship(
             'StreamElementsConnector',
             backref='user',
