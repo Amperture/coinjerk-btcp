@@ -2,18 +2,16 @@ import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loade
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 
-import colors from 'vuetify/lib/util/colors'
-
 Vue.use(Vuetify);
 
 export default new Vuetify({
   theme: {
-    dark: true,
+    dark: false,
     themes: {
       dark: {
-        primary: colors.blue.lighten2,
-        secondary: colors.green.lighten4,
-        accent: colors.indigo.base,
+          primary: '#0a0a0b',
+          secondary: '#181a1b',
+          accent: '#56bce8'
       }
     }
   },
