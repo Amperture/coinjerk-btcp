@@ -124,8 +124,8 @@
 export default {
   name: 'home',
 
-  components: {
-  },
+  components: [
+  ],
 
   data: () => ({
     supportedOverlays: [
@@ -145,7 +145,7 @@ export default {
       {
         avatar: require('@/assets/btcpayserver_logo.png'),
         name: 'BTCPayServer',
-        url: 'https://streamelements.com'
+        url: 'https://btcpayserver.org'
       },
       {
         avatar: require('@/assets/casanode_logo.png'),
