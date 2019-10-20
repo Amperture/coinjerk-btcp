@@ -47,7 +47,7 @@
               flat
               tile
             >
-              <v-card-text>login card</v-card-text>
+              <LoginCard/>
             </v-card>
           </v-tab-item>
 
@@ -59,7 +59,7 @@
               flat
               tile
             >
-              <v-card-text>signup card</v-card-text>
+              <v-card-text>dingle card</v-card-text>
             </v-card>
           </v-tab-item>
 
@@ -71,14 +71,19 @@
 </template>
 
 <script>
-  export default {
+import LoginCard from '@/components/LoginCard'
 
-    data: () => ({
-        dialog: false,
-        tab: null,
-        tabs: 2,
-    }),
-  }
+export default {
+  components: {
+    LoginCard,
+  },
+
+  data: () => ({
+      dialog: false,
+      tab: null,
+      tabs: 2,
+  }),
+}
 </script>
 
 <style>
