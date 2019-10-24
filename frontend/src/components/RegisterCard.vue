@@ -18,13 +18,19 @@
             type="password"
             :rules='passwordRules'
           ></v-text-field>
+          <v-text-field 
+            v-model='confirmPassword'
+            label="Confirm Password"
+            type="password"
+            :rules='confirmPasswordRules'
+          ></v-text-field>
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-btn 
           color="blue darken-1" 
           text 
-          @click="cancelLogin()"
+          @click="cancelRegistration()"
         >Cancel</v-btn>
         <v-btn 
           color="blue darken-1" 
@@ -38,30 +44,38 @@
 
 <script>
 export default {
+  props: ['closedialog'],
 
   data: function () {
     return {
       username: '',
       usernameRules: [
-        v => !!v || 'Look, obviously you have a username...',
+        v => !!v || 'No really, what do you want to be called?', 
       ],
 
       password: '',
       passwordRules: [
-        v => !!v || 'Don\'t try and tell me you don\'t have a password...',
+        v => !!v || 'I\'m not letting you in without making a password.',
+        v => v.length > 8 || 'At least eight characters long, please.',
+      ],
+
+      confirmPassword: '',
+      confirmPasswordRules: [
+        v => v === this.password || 
+          "Did you already forget the password you want?",
       ],
 
     }
   },
 
   methods: {
-    cancelLogin(){
+    cancelRegistration(){
       this.$refs.form.reset()
       this.username = '';
       this.password = '';
+      this.confirmPassword = '';
       this.$emit('closedialog')
     },
-
   },
   
 }

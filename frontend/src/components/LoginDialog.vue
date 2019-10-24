@@ -43,28 +43,21 @@
             key="login"
             value="tab-login"
           >
-            <v-card
-              flat
-              tile
-            >
-              <LoginCard/>
-            </v-card>
+            <LoginCard
+              @closedialog='dialog = false'
+            />
           </v-tab-item>
 
           <v-tab-item
             key="signup"
             value="tab-signup"
           >
-            <v-card
-              flat
-              tile
-            >
-              <v-card-text>dingle card</v-card-text>
-            </v-card>
+            <RegisterCard
+              @closedialog='dialog = false'
+            />
           </v-tab-item>
 
         </v-tabs>
-        <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
       </v-card>
     </v-dialog>
   </div>
@@ -72,10 +65,11 @@
 
 <script>
 import LoginCard from '@/components/LoginCard'
+import RegisterCard from '@/components/RegisterCard'
 
 export default {
   components: {
-    LoginCard,
+    LoginCard, RegisterCard
   },
 
   data: () => ({
@@ -83,6 +77,12 @@ export default {
       tab: null,
       tabs: 2,
   }),
+
+  methods: {
+    closeDialog(){
+      this.dialog = false;
+    }, 
+  },
 }
 </script>
 
