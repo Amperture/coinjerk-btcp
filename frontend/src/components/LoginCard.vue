@@ -29,7 +29,7 @@
         <v-btn 
           color="blue darken-1" 
           text 
-          @click="dialog = false"
+          @click="beepoLoginCard"
         >Login</v-btn>
       </v-card-actions>
     </v-card>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
 
   data: function () {
@@ -54,6 +55,10 @@ export default {
     }
   },
 
+  computed: mapState({
+    surveys: state => state.surveys
+  }),
+
   methods: {
     cancelLogin(){
       this.$refs.form.reset()
@@ -61,7 +66,16 @@ export default {
       this.password = '';
       this.$emit('closedialog')
     },
+    login(){
+      this.$store.dispatch(
+        'login', 
+        { 
+          username: this.username,
+          password: this.password,
+        }
+      ).then(() => this.$router.push('/dashboard'))
 
+    }, 
   },
   
 }
