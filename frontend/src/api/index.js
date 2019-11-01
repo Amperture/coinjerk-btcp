@@ -4,14 +4,14 @@ const API_URL = process.env.API_URL
 
 export function userLogin(loginData){
   return axios.post(
-    `${BASE_URL}/auth/login/`,
+    `${API_URL}/auth/login/`,
     loginData
   )
 }
 
 export function userRegister(newUserData){
   return axios.post(
-    `${BASE_URL}/auth/register/`,
+    `${API_URL}/auth/register/`,
     newUserData
   )
 }
