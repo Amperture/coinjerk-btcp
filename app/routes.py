@@ -3,7 +3,7 @@ from app.models import \
         BTCPayClientConnector, StreamElementsConnector, Invoice
 from btcpay import BTCPayClient
 
-from flask import jsonify, redirect
+from flask import jsonify, redirect, render_template
 
 import requests
 
@@ -11,7 +11,7 @@ import requests
 @app.route('/')
 @app.route('/index')
 def index():
-    return "Hello, internet!"
+    return render_template('index.html')
 
 
 @app.route('/streamelements_setup/<string:chan_id>/<string:jwt>')

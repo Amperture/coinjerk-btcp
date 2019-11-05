@@ -1,19 +1,23 @@
 <template>
   <div>
-    <v-card flat>
+    <v-card 
+      flat
+      :loading='loading'
+    >
       <v-card-text>
         <v-form
           ref='form'
-          v-model='valid'
           lazy-validation
         >
           <v-text-field 
             v-model='username'
+            prepend-icon="mdi-account"
             label="Username"
             :rules='usernameRules'
           ></v-text-field>
           <v-text-field 
             v-model='password'
+            prepend-icon="mdi-lock"
             label="Password"
             type="password"
             :rules='passwordRules'
@@ -29,7 +33,7 @@
         <v-btn 
           color="blue darken-1" 
           text 
-          @click="beepoLoginCard"
+          @click="submit"
         >Login</v-btn>
       </v-card-actions>
     </v-card>
@@ -42,6 +46,8 @@ export default {
 
   data: function () {
     return {
+      loading: false,
+
       username: '',
       usernameRules: [
         v => !!v || 'Look, obviously you have a username...',
@@ -56,25 +62,32 @@ export default {
   },
 
   computed: mapState({
-    surveys: state => state.surveys
+    //surveys: state => state.surveys
   }),
 
   methods: {
     cancelLogin(){
       this.$refs.form.reset()
-      this.username = '';
-      this.password = '';
       this.$emit('closedialog')
     },
-    login(){
-      this.$store.dispatch(
-        'login', 
-        { 
-          username: this.username,
-          password: this.password,
-        }
-      ).then(() => this.$router.push('/dashboard'))
 
+    submit(){
+      if(this.$refs.form.validate()){
+        this.loading = true
+        this.$store.dispatch('login', { 
+            username: this.username,
+            password: this.password,
+          })
+          .then((data) => {
+            console.log("comp succ", data)
+            this.loading = false
+            this.$router.push('/dashboard')
+          })
+          .catch((error) => {
+            console.log("comp err", error)
+            this.loading = false
+          })
+      } 
     }, 
   },
   

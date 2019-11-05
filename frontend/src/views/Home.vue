@@ -4,13 +4,13 @@
       flat
       class="mx-auto"
     >
-    <v-card-title 
-      class='display-3 logo-text justify-center'
-    >
-      <p class='text-center logo-text'>
-        Welcome to Coin<span class='primary--text'>Jerk</span>
-      </p>
-    </v-card-title>
+      <v-card-title 
+        class='display-3 logo-text justify-center'
+      >
+        <p class='text-center logo-text'>
+          Welcome to Coin<span class='primary--text'>Jerk</span>
+        </p>
+      </v-card-title>
 
       <v-card-subtitle 
         class="pb-0 justify-center display-2"
