@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
 
 from app.auth.routes import auth
 import os
@@ -16,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 CORS(app)
+bcrypt = Bcrypt(app)
 
 app.register_blueprint(auth, url_prefix='/auth')
 

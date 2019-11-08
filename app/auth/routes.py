@@ -1,8 +1,5 @@
-from flask import Blueprint, jsonify
-from flask_cors import CORS
-
-auth = Blueprint('auth', __name__)
-CORS(auth)
+from flask import jsonify
+from app.auth import auth
 
 
 @auth.route("/login", methods=['POST'])
