@@ -4,21 +4,31 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 
-from app.auth.routes import auth
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+db = SQLAlchemy()
+cors = CORS()
+bcrypt = Bcrypt()
+migrate = Migrate()
 
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-        'sqlite:///' + os.path.join(basedir, 'app.db')
-        )
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-CORS(app)
-bcrypt = Bcrypt(app)
+def create_app():
+    app = Flask(__name__)
 
-app.register_blueprint(auth, url_prefix='/auth')
+    db.init_app(app)
+    cors.init_app(app)
+    bcrypt.init_app(app)
+    migrate.init_app(app, db)
 
-from app import routes, models  # noqa: E402,F401
+    from app.auth import auth
+    app.register_blueprint(auth, url_prefix='/auth')
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = (
+            'sqlite:///' + os.path.join(basedir, 'app.db')
+            )
+
+    return app
+
+
+from app import models  # noqa: E402,F401
