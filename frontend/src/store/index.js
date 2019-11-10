@@ -14,7 +14,6 @@ export default new Vuex.Store({
 
   mutations: {
     setUser(state, payload) {
-      console.log("is the exception in the mutation?")
       state.user = payload.user
     }
 
@@ -25,8 +24,16 @@ export default new Vuex.Store({
     login(context, data){
       return api.userLogin(data)
         .then(response => {
-          console.log("action succ")
-          console.log(response)
+          context.commit('setUser', { user: response.user })
+        })
+        .catch(error => {
+          throw error;
+        })
+    },
+
+    register(context, data){
+      return api.userRegister(data)
+        .then(response => {
           context.commit('setUser', { user: response.user })
         })
         .catch(error => {
