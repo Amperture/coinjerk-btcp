@@ -15,6 +15,7 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object('app.config.Config')
 
     db.init_app(app)
     cors.init_app(app)
@@ -23,10 +24,6 @@ def create_app():
 
     from app.auth import auth
     app.register_blueprint(auth, url_prefix='/auth')
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = (
-            'sqlite:///' + os.path.join(basedir, 'app.db')
-            )
 
     return app
 

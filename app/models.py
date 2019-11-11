@@ -1,16 +1,12 @@
-from app import app, db  # noqa: F401
-from werkzeug.security import generate_password_hash, check_password_hash
+from app import db, bcrypt  # noqa: F401
 import enum
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-
     username = db.Column(db.String(64), unique=True, nullable=False)
-
-    email = db.Column(db.String(128), unique=True, nullable=False)
-
-    password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(128), unique=True)
+    hashed_password = db.Column(db.String(64), nullable=False)
 
     invoices = db.relationship(
             'Invoice',
@@ -31,6 +27,32 @@ class User(db.Model):
             lazy=True,
             uselist=False,
             )
+
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+    @classmethod
+    def authenticate(klass, **kwargs):
+        username = kwargs.get('username')
+        password = kwargs.get('password')
+
+        if not username or not password:
+            return None
+
+        user = klass.query.filter_by(username=username).first()
+        if not user or not user.check_password(password):
+            return None
+
+        return user
+
+    def set_password(self, password):
+        self.hashed_password = bcrypt.generate_password_hash(password)
+
+    def hash_password(password):
+        return bcrypt.generate_password_hash(password)
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.hashed_password, password)
 
 
 class InvoiceStatus(enum.Enum):
@@ -54,7 +76,9 @@ class Invoice(db.Model):
             db.Integer, db.ForeignKey('user.id'), nullable=False
             )
     btcp_client_connector_id = db.Column(
-            db.Integer, db.ForeignKey('user.id'), nullable=False
+            db.Integer,
+            db.ForeignKey('btc_pay_client_connector.id'),
+            nullable=False
             )
 
 
@@ -63,7 +87,7 @@ class BTCPayClientConnector(db.Model):
 
     client = db.Column(db.PickleType)
     user_id = db.Column(
-            db.Integer, db.ForeignKey('user.id'), nullable=False
+            db.Integer, db.ForeignKey('user.id')
             )
     invoices = db.relationship(
             'Invoice',

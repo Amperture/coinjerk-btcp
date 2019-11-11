@@ -79,13 +79,13 @@ export default {
             password: this.password,
           })
           .then((data) => {
-            console.log("comp succ", data)
+            console.log(data) // eslint-disable-line no-console
             this.loading = false
             this.$router.push('/dashboard')
           })
           .catch((error) => {
-            console.log("comp err", error)
             this.loading = false
+            console.log(error.data) // eslint-disable-line no-console
           })
       } 
     }, 

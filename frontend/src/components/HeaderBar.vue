@@ -26,6 +26,25 @@
       <v-divider></v-divider>
 
       <v-list
+        v-if='isAuthenticated'
+        dense
+        nav
+        >
+        <v-list-item
+          v-for="item in loginItems"
+          :key="item.title"
+          link
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-list
         dense
         nav
         >
@@ -66,7 +85,9 @@
           append-icon="mdi-brightness-3"
           hide-details
         ></v-switch>
-        <LoginDialog/>
+        <LoginDialog
+          v-if="!isAuthenticated"
+        />
     </v-app-bar>
   </div>
 </template>
@@ -74,6 +95,7 @@
 <script>
 // @ is an alias to /src
 import LoginDialog from '@/components/LoginDialog'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'header-bar',
@@ -81,6 +103,10 @@ export default {
   components: {
     LoginDialog,
   },
+
+  computed: {
+    ...mapGetters(['isAuthenticated'])
+  }, 
 
   data: () => ({
     navDrawer: {
