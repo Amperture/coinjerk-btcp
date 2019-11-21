@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home.vue'
+import Dashboard from '@/views/Dashboard.vue'
 import TipPage from '@/views/TipPage.vue'
+
+import { mapGetters } from 'vuex'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -13,6 +16,14 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard, 
+      meta: {
+        requires_auth: true
+      }
     },
     {
       path: '/tip/:username',
@@ -30,3 +41,19 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requires_auth)) {
+    if(!mapGetters(['isAuthenticated'])){
+      next({
+        path: '/',
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+export default router
