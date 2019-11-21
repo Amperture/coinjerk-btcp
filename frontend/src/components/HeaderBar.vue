@@ -5,21 +5,21 @@
       bottom
       clipped
       app
-    >
+      >
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">
             CoinJerk
           </v-list-item-title>
-          <v-list-item-subtitle>
-            Accept Tips in Bitcoin,
-          </v-list-item-subtitle>
-          <v-list-item-subtitle>
-            Lightning,
-          </v-list-item-subtitle>
-          <v-list-item-subtitle>
-            and other Cryptocurrency!
-          </v-list-item-subtitle>
+      <v-list-item-subtitle>
+        Accept Tips in Bitcoin,
+      </v-list-item-subtitle>
+      <v-list-item-subtitle>
+        Lightning,
+      </v-list-item-subtitle>
+      <v-list-item-subtitle>
+        and other Cryptocurrency!
+      </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
@@ -34,14 +34,15 @@
           v-for="item in loginItems"
           :key="item.title"
           link
-        >
+          @click="$router.push(item.path)"
+          >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
         </v-list-item>
       </v-list>
       <v-list
@@ -52,14 +53,14 @@
           v-for="item in standardItems"
           :key="item.title"
           link
-        >
+          >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -68,25 +69,25 @@
       dark
       color="accent"
       app
-    >
-        <v-app-bar-nav-icon
-          @click.stop="navDrawer.model = !navDrawer.model"
+      >
+      <v-app-bar-nav-icon
+        @click.stop="navDrawer.model = !navDrawer.model"
         ></v-app-bar-nav-icon>
-        <img 
-          src="@/assets/coinjerk-header-stroke.png"
-          style="max-height:100%"
-          @click="$router.push('/')"
+      <img 
+        src="@/assets/coinjerk-header-stroke.png"
+        style="max-height:100%"
+        @click="$router.push('/')"
         />
-        <div class='flex-grow-1'></div>
-        <v-switch
-          v-model="$vuetify.theme.dark"
-          color="primary"
-          prepend-icon="mdi-brightness-7"
-          append-icon="mdi-brightness-3"
-          hide-details
+      <div class='flex-grow-1'></div>
+      <v-switch
+        v-model="$vuetify.theme.dark"
+        color="primary"
+        prepend-icon="mdi-brightness-7"
+        append-icon="mdi-brightness-3"
+        hide-details
         ></v-switch>
-        <LoginDialog
-          v-if="!isAuthenticated"
+      <LoginDialog
+        v-if="!isAuthenticated"
         />
     </v-app-bar>
   </div>
@@ -116,7 +117,7 @@ export default {
       mini: false,
     },
     loginItems: [
-      { title: 'Dashboard', icon: 'mdi-view-dashboard' },
+      { title: 'Dashboard', icon: 'mdi-view-dashboard' , path: "/dashboard" },
       { title: 'Tips', icon: 'mdi-bitcoin' },
       { title: 'User Settings', icon: 'mdi-settings' },
     ],
