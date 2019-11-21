@@ -48,6 +48,9 @@ class User(db.Model):
     def set_password(self, password):
         self.hashed_password = bcrypt.generate_password_hash(password)
 
+    def pay_client(self):
+        return self.btcp_client_connector.client
+
     def hash_password(password):
         return bcrypt.generate_password_hash(password)
 
