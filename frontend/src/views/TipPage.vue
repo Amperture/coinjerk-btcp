@@ -1,72 +1,8 @@
 <template>
   <v-app id="inspire">
-    <v-container
-      class="fill-height"
-      fluid
-    >
-      <v-row
-        align="center"
-        justify="center"
-      >
-        <v-col class="text-center">
-          <v-card
-            max-width="800"
-            class='mx-auto'>
-            <v-img
-              src="https://coinjerk.com/static/img/tip/default_header.jpg"
-            >
-              <v-card-title
-                class="title align-end fill-height tip-username"
-                >Tip {{ username }}
-              </v-card-title>
-            </v-img>
-            <v-card-text>
-              <v-form>
-                <v-row>
-                  <v-col cols="8">
-                    <v-text-field
-                      label="Name"
-                      name="login"
-                      prepend-icon="mdi-account-box"
-                      type="text"
-                      clearable
-                      hint="Optional. Twitch or Twitter name preferred."
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-select
-                      :items="currencies"
-                      label="Currency/Denomination"
-                      prepend-icon="mdi-currency-usd"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row>
-                  Choose Amount Here
-                </v-row>
-                <v-row>
-                  <v-col cols="12"
-                  >
-                    <v-textarea
-                      auto-grow="true"
-                      row-height=1
-                      prepend-icon="mdi-comment-text"
-                      label="Message"
-                      hint="Would you like to leave a message for the broadcaster? You can do so here!"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-btn 
-                    color="blue darken-1" 
-                    text 
-                    @click="invoiceModal"
-                  >Login</v-btn>
-                </v-row>
-              </v-form>
-            </v-card-text>
-          </v-card>
-        </v-col>
+    <v-container class="fill-height" fluid>
+      <v-row align='center' justify='center'>
+        <TipFormCard/>
       </v-row>
     </v-container>
     <v-footer
@@ -79,10 +15,16 @@
 </template>
 
 <script>
+import TipFormCard from '@/components/TipFormCard'
+
   export default {
     props: {
       username: String,
       source: String,
+    },
+    
+    components: {
+      TipFormCard,
     },
 
     created () {

@@ -5,7 +5,9 @@
       dark
       flat
     >
-      <v-toolbar-title>Tip to Someone!</v-toolbar-title>
+      <v-toolbar-title
+        class='title align-end tip-username'
+        >Tip to Someone!</v-toolbar-title>
       <div class="flex-grow-1"></div>
       <v-tooltip bottom>
       </v-tooltip>
@@ -15,34 +17,38 @@
     <v-card-text>
       <v-form>
         <v-row>
+          <v-col cols="8">
           <v-text-field
-            clearable
             label="Name"
             name="login"
-            rounded=true
-            outlined=true
-            hint="Who is sending? (Optional)"
-            prepend-icon="mdi-account"
+            prepend-icon="mdi-account-box"
             type="text"
-          ></v-text-field>
-          <v-text-field
             clearable
-            label="Name"
-            name="login"
-            rounded=true
-            outlined=true
-            hint="Who is sending? (Optional)"
-            prepend-icon="mdi-account"
-            type="number"
-          ></v-text-field>
+            hint="Optional. Twitch or Twitter name preferred."
+          />
+          </v-col>
+          <v-col cols="4">
+            <v-select
+              :items="currencies"
+              label="Currency/Denomination"
+              prepend-icon="mdi-currency-usd"
+              />
+          </v-col>
         </v-row>
-        <v-text-field
-          id="password"
-          label="Password"
-          name="password"
-          prepend-icon="mdi-lock"
-          type="password"
-        ></v-text-field>
+        <v-row>
+          Choose Amount Here
+        </v-row>
+        <v-row>
+          <v-col cols="12">
+            <v-textarea
+              auto-grow="true"
+              row-height=1
+              prepend-icon="mdi-comment-text"
+              label="Message"
+              hint="Would you like to leave a message for the broadcaster? You can do so here!"
+              />
+          </v-col>
+        </v-row>
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -51,3 +57,9 @@
     </v-card-actions>
   </v-card>
 </template>
+
+<script>
+</script>
+
+<style>
+</style>
