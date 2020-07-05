@@ -1,106 +1,74 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer
-      v-model="drawer"
-      app
+    <v-container
+      class="fill-height"
+      fluid
     >
-      <v-list dense>
-        <v-list-item >
-          <v-list-item-action>
-            <v-icon>mdi-home</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item >
-          <v-list-item-action>
-            <v-icon>mdi-contact-mail</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Contact</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-app-bar
-      app
-      color="green darken-4"
-      dark
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>CoinJerk WIP</v-toolbar-title>
-    </v-app-bar>
-
-    <v-content>
-      <v-container
-        class="fill-height"
-        fluid
+      <v-row
+        align="center"
+        justify="center"
       >
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col class="text-center">
-            <v-card
-              max-width="800"
-              class='mx-auto'>
-              <v-img
-                src="https://coinjerk.com/static/img/tip/default_header.jpg"
-              >
-                <v-card-title
-                  class="title align-end fill-height tip-username"
-
-                >Tip Amperture
-                </v-card-title>
-              </v-img>
-              <v-card-text>
-                <v-form>
-                  <v-row>
-                    <v-col cols="8">
-                      <v-text-field
-                        label="Name"
-                        name="login"
-                        prepend-icon="mdi-account-box"
-                        type="text"
-                        clearable
-                        hint="Optional. Twitch or Twitter name preferred."
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-select
-                        :items="currencies"
-                        label="Currency/Denomination"
-                        prepend-icon="mdi-currency-usd"
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    Choose Amount Here
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12"
-                    >
-                      <v-textarea
-                        auto-grow="true"
-                        row-height=1
-                        prepend-icon="mdi-comment-text"
-                        label="Message"
-                        hint="Would you like to leave a message for the broadcaster? You can do so here!"
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    BTCPay Button Here, on the right
-                  </v-row>
-                </v-form>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-content>
+        <v-col class="text-center">
+          <v-card
+            max-width="800"
+            class='mx-auto'>
+            <v-img
+              src="https://coinjerk.com/static/img/tip/default_header.jpg"
+            >
+              <v-card-title
+                class="title align-end fill-height tip-username"
+                >Tip {{ username }}
+              </v-card-title>
+            </v-img>
+            <v-card-text>
+              <v-form>
+                <v-row>
+                  <v-col cols="8">
+                    <v-text-field
+                      label="Name"
+                      name="login"
+                      prepend-icon="mdi-account-box"
+                      type="text"
+                      clearable
+                      hint="Optional. Twitch or Twitter name preferred."
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="4">
+                    <v-select
+                      :items="currencies"
+                      label="Currency/Denomination"
+                      prepend-icon="mdi-currency-usd"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row>
+                  Choose Amount Here
+                </v-row>
+                <v-row>
+                  <v-col cols="12"
+                  >
+                    <v-textarea
+                      auto-grow="true"
+                      row-height=1
+                      prepend-icon="mdi-comment-text"
+                      label="Message"
+                      hint="Would you like to leave a message for the broadcaster? You can do so here!"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-btn 
+                    color="blue darken-1" 
+                    text 
+                    @click="invoiceModal"
+                  >Login</v-btn>
+                </v-row>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
     <v-footer
       color="indigo"
       app
@@ -118,8 +86,17 @@
     },
 
     created () {
-      this.$vuetify.theme.dark = true
+      let btcPayModalScript = document.createElement('script')
+      btcPayModalScript.setAttribute('src', "https://btcpay960873.lndyn.com/modal/btcpay.js")
+      document.head.appendChild(btcPayModalScript)
     },
+
+    methods: {
+      invoiceModal(){
+        window.btcpay.showInvoice('9LemhFi3Qzdekorw85PpHv')
+      },
+
+    }, 
 
     data: () => ({
       drawer: false,

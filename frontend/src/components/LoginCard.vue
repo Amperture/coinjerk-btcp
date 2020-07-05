@@ -74,7 +74,7 @@ export default {
         submit(){
             if(this.$refs.form.validate()){
                 this.loading = true
-                this.$store.dispatch('login', { 
+                this.$store.dispatch('auth/login', { 
                     username: this.username,
                     password: this.password,
                 })

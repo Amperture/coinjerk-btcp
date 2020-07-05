@@ -106,7 +106,8 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['isAuthenticated'])
+    ...mapGetters('auth',
+      ['isAuthenticated'])
   }, 
 
   data: () => ({

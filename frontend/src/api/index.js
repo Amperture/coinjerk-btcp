@@ -1,39 +1,18 @@
 import axios from 'axios'
+import * as auth from '@/api/auth'
+import * as btcpay from '@/api/btcpay'
+import * as streamelements from '@/api/streamelements'
 
-const API_URL = process.env.API_URL || '//localhost:5000'
+// eslint-disable-next-line no-unused-vars
+export const API_URL = '//localhost:5000'
 
+axios.defaults.headers.common['Authorization'] =
+  localStorage.getItem('user-token')
 
-axios.defaults.headers.common['Authorization'] = localStorage.getItem('user-token')
-
-export function userLogin(loginData){
-  return axios.post(
-    `${API_URL}/auth/login`,
-    loginData
-  )
+export default {
+  auth,
+  btcpay,
+  streamelements
 }
 
-export function userRegister(newUserData){
-  return axios.post(
-    `${API_URL}/auth/register`,
-    newUserData
-  )
-}
 
-export function btcPayServerSetup(setupData){
-  return axios.post(
-    `${API_URL}/api/connectors/btcpay`,
-    setupData
-  )
-}
-
-export function fetchUser(){
-  return axios.get(
-    `${API_URL}/user`,
-  )
-}
-
-export function fetchUserPayServer(){
-  return axios.get(
-    `${API_URL}/user/payserver`,
-  )
-}

@@ -21,7 +21,7 @@ def token_required(f):
 
         if len(auth_headers) != 1:
             print("invalid_req")
-        return jsonify(invalid_req), 401
+            return jsonify(invalid_req), 401
 
         try:
 

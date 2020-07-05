@@ -9,22 +9,21 @@
       <v-expansion-panel>
         <v-expansion-panel-header v-slot="{ open }">
           <v-row no-gutters>
-            <v-col cols="4">BTCPayServer</v-col>
+            <v-col cols="4">StreamElements</v-col>
             <v-col
               cols="8"
               class="text--secondary"
               >
               <v-fade-transition leave-absolute>
-                <span
-                  v-if="open">Set up your BTCPayServer Connection Here!</span>
+                <span v-if="open">Set up your StreamElements Connection Here!</span>
                 <v-row
                   v-else
                   no-gutters
                   style="width: 100%"
                   >
-                  <v-col
+                  <v-col 
                     cols="6"
-                    v-html="server_host"
+                    v-html=""
                     />
                 </v-row>
               </v-fade-transition>
@@ -44,19 +43,22 @@
                 lazy-validation
                 >
                 <v-text-field
-                  v-model="serverURL"
-                  :rules="serverURLRules"
-                  label="BTCPayServer URL"
+                  type="password"
+                  v-model="channelID"
+                  :rules="channelIDRules"
+                  label="Channel ID"
                   required
                   ></v-text-field>
                 <v-text-field
-                  v-model="pairingCode"
-                  label="Server Pairing Code"
+                  type="password"
+                  v-model="channelJWT"
+                  :rules="channelJWTRules"
+                  label="JWT Key"
                   required
                   ></v-text-field>
-                <v-btn
+                <v-btn 
                   :loading="formLoading"
-                  @click="submit"
+                  @click="submit" 
                   :disabled="!valid"
                   >Connect</v-btn>
               </v-form>
@@ -67,7 +69,6 @@
     </v-expansion-panels>
   </v-card>
 </template>
-
 <script>
 import { mapState } from 'vuex'
 
@@ -75,8 +76,6 @@ export default {
 
   computed: {
     ...mapState({
-      server_host: state => state.btcpay['server_host'] ||
-        "Not Set Up"
     })
   },
 
@@ -84,19 +83,17 @@ export default {
     return {
       valid: true,
 
-      serverHost: "Not Set Up",
-
       cardLoading: false,
       formLoading: false,
 
-      serverURL: '',
-      serverURLRules: [
-        v => !!v || "We need a Server to connect to!",
+      channelID: '',
+      channelIDRules: [
+        v => !!v || "I mean if you want to connect to Streamelements, you have an account there...",
       ],
 
-      pairingCode: '',
-      pairingCodeRules: [
-        v => !!v || "The server won't accept a connection without a code!",
+      channelJWT: '',
+      channelJWTRules: [
+        v => !!v || "We need credentials to make tips on Streamelements!",
       ]
     }
   },
@@ -105,15 +102,11 @@ export default {
     submit(){
       if(this.$refs.form.validate()){
         this.formLoading = true
-        this.$store.dispatch('btcpay/btcpaySetupAction',{
-          url: this.serverURL,
-          code: this.pairingCode,
+        this.$store.dispatch('streamElementsSetupAction',{
+          channelID: this.channelID,
+          channelJWT: this.channelJWT, 
         })
           .then((data) => {
-            // eslint-disable-next-line
-            console.log(data)
-            this.formLoading = false
-            this.serverHost = "Valid"
           })
           .catch()
       }
@@ -121,10 +114,7 @@ export default {
   },
 
   mounted: function() {
-    this.$store.dispatch('btcpay/getBTCPayServer')
-  },
+    this.$store.dispatch('getUserPayServerAction')
+  }, 
 }
 </script>
-
-<style>
-</style>
