@@ -51,7 +51,7 @@
         <v-row>
           <v-col cols="12">
             <v-textarea
-              auto-grow="true"
+              auto-grow
               row-height=1
               prepend-icon="mdi-comment-text"
               label="Message"
@@ -90,7 +90,7 @@ export default {
     createInvoice: function () {
       this.$refs.invoiceDialog.invoiceStatus = "loading"
       this.$refs.invoiceDialog.dialog = true
-      setTimeout(() => (this.$refs.invoiceDialog.invoiceStatus = 'waitingForPayment'), 3000)
+      setTimeout(() => (this.$refs.invoiceDialog.invoiceStatus = 'waitingForPayment'), 1000)
     },
   },
 
