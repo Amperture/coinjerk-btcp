@@ -45,6 +45,12 @@ class User(db.Model):
 
         return user
 
+    def tip_page_export(self):
+        exp = {
+                'display_name': self.username,
+                }
+        return exp
+
     def set_password(self, password):
         self.hashed_password = bcrypt.generate_password_hash(password)
 

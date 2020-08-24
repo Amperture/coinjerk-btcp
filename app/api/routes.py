@@ -3,7 +3,8 @@ from flask import jsonify, request
 from app import db
 from app.api import api
 from app.decorators import token_required
-from app.models import BTCPayClientConnector, StreamElementsConnector
+from app.models import BTCPayClientConnector, StreamElementsConnector, User
+from sqlalchemy.orm.exc import NoResultFound
 
 from btcpay import BTCPayClient
 
@@ -65,4 +66,27 @@ def streamelements_connector_post(user):
     db.session.commit()
     return jsonify({
         'success': True
+        })
+
+
+@api.route('/payments', methods=['GET'])
+def get_payments_connector():
+    data = request.args
+    try:
+        username = data['username']
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'error': 'invalid_form'
+            })
+    try:
+        user = User.query.filter_by(username=username).one()
+    except NoResultFound:
+        return jsonify({
+            'success': False,
+            'error': 'user_not_found'
+            })
+    return jsonify({
+        'success': True,
+        'user': user.tip_page_export()
         })

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-12">
+  <v-card class="elevation-4">
     <InvoiceDialog
       ref='invoiceDialog'
     />
@@ -10,7 +10,7 @@
       >
       <v-toolbar-title
         class='title align-end tip-username'
-        >Tip to Someone!</v-toolbar-title>
+        >Tip to {{ displayName }}!</v-toolbar-title>
       <div class="flex-grow-1"></div>
     </v-toolbar>
     <v-card-text>
@@ -31,8 +31,9 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="4">
+          <v-col cols="5">
             <v-select
+              v-model='selectedCurrency'
               :items="currencies"
               label="Denomination"
               prepend-icon="mdi-currency-usd"
@@ -45,7 +46,7 @@
               min="0"
               step=".1"
               type="number"
-            ></v-text-field>
+            />
           </v-col>
         </v-row>
         <v-row>
@@ -58,7 +59,7 @@
               hint="Would you like to leave a message for the broadcaster? You can do so here!"
               counter
               :rules='[rules.messageMaxLength]'
-              />
+            />
           </v-col>
         </v-row>
         <v-row>
@@ -82,6 +83,36 @@
 import InvoiceDialog from '@/components/InvoiceDialog';
 export default {
 
+  props: {
+    displayName: {
+      type: String,
+      required: true
+    },
+    paymentAPIs: {
+      type: Array,
+      required: true
+    },
+    currencies: {
+      type: Array,
+      default: function() {
+        return [
+          {
+            text: 'Satoshis',
+            value: "sats",
+          },
+          {
+            text: 'Bitcoins (BTC)',
+            value: "btc",
+          },
+          {
+            text: 'US Dollar (USD)',
+            value: "usd",
+          },
+        ]
+      },
+    },
+  },
+
   components: {
     InvoiceDialog
   },
@@ -90,11 +121,16 @@ export default {
     createInvoice: function () {
       this.$refs.invoiceDialog.invoiceStatus = "loading"
       this.$refs.invoiceDialog.dialog = true
+
+      // TODO: placeholder, make API call to create invoice here
       setTimeout(() => (this.$refs.invoiceDialog.invoiceStatus = 'waitingForPayment'), 1000)
+      // ENDTODO
     },
   },
 
-  data: () => ({
+  data: function() { return {
+    selectedCurrency: this.currencies[0],
+
     rules: {
       required: value => !!value || 'This field is required!',
       nameMaxLength: value => value.length <= 25 || "No more than 25 characters!",
@@ -105,12 +141,8 @@ export default {
       messageMaxLength: value => value.length <= 255 || "No more than 255 characters!",
     },
     drawer: false,
-    currencies: [
-      'USD',
-      'BTC',
-      'satoshis'
-    ]
-  }),
+
+  }},
 }
 </script>
 

@@ -1,15 +1,38 @@
 <template>
   <v-app id="inspire">
-    <v-container class="fill-height" fluid>
-      <v-row align='center' justify='center'>
-        <TipFormCard/>
+    <v-container 
+      class="fill-height" 
+    >
+      <v-row 
+        justify='center'
+      >
+        <v-col
+          cols=6
+        >
+
+          <v-skeleton-loader
+            :loading='loading'
+            transition='scale-transition'
+            justify='start'
+            type='card-heading'
+          >
+            <TipFormCard
+              v-bind='formCardProps'
+            />
+          </v-skeleton-loader>
+          <v-skeleton-loader
+            v-show='loading'
+            transition='none'
+            justify='end'
+            type='card'
+          />
+        </v-col>
       </v-row>
     </v-container>
     <v-footer
-      color="indigo"
       app
     >
-      <span class="white--text">&copy; 2019</span>
+      <span>&copy; Amperture 2020</span>
     </v-footer>
   </v-app>
 </template>
@@ -28,25 +51,34 @@ import TipFormCard from '@/components/TipFormCard'
     },
 
     created () {
-      let btcPayModalScript = document.createElement('script')
-      btcPayModalScript.setAttribute('src', "https://btcpay960873.lndyn.com/modal/btcpay.js")
-      document.head.appendChild(btcPayModalScript)
+      this.$store.dispatch('payments/getUserPaymentServer', {
+        username: this.$route.params.username
+      }).then((response) => {
+          console.log(response.data.user.display_name)
+          this.formCardProps.displayName = response.data.user.display_name
+          this.loading = false
+      }).catch((error) => {
+          // TODO Do something a little more with the error,
+          // maybe redirect to a 404?
+          console.log(error)
+          this.formCardProps.displayName = "user_not_found"
+          this.loading = false
+      })
+
     },
 
     methods: {
-      invoiceModal(){
-        window.btcpay.showInvoice('9LemhFi3Qzdekorw85PpHv')
-      },
-
     }, 
 
     data: () => ({
       drawer: false,
-      currencies: [
-        'USD',
-        'BTC',
-        'satoshis'
-      ]
+
+      loading: true,
+      formCardProps: {
+        displayName: "blahblah",
+        paymentAPIs: ['btcpay']
+
+      }, 
     }),
   }
 </script>
