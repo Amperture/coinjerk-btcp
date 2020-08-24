@@ -2,12 +2,9 @@
   <v-card class="elevation-4">
     <InvoiceDialog
       ref='invoiceDialog'
+      v-bind='invoiceDialogProps'
     />
-    <v-toolbar
-      color="primary"
-      dark
-      flat
-      >
+    <v-toolbar color='primary' flat>
       <v-toolbar-title
         class='title align-end tip-username'
         >Tip to {{ displayName }}!</v-toolbar-title>
@@ -19,46 +16,32 @@
         >
         <v-row>
           <v-col cols="12">
-            <v-text-field
-              label="Name"
-              name="login"
+            <v-text-field label="Name" name="login" type='text' clearable
               prepend-icon="mdi-account-box"
-              type="text"
-              clearable
               hint="Optional. Twitch or Twitter name preferred."
               :rules='[rules.nameMaxLength, rules.nameAlphaNumeric]'
+              v-model='tipFormFields.name'
               />
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="5">
-            <v-select
-              v-model='selectedCurrency'
-              :items="currencies"
-              label="Denomination"
-              prepend-icon="mdi-currency-usd"
+            <v-select v-model='selectedCurrency' :items='currencies'
+              label="Denomination" prepend-icon='mdi-currency-usd'
               />
           </v-col>
           <v-col>
-            <v-text-field
-              label='Amount'
-              v-model="height"
-              min="0"
-              step=".1"
-              type="number"
+            <v-text-field label='Amount' v-model='tipFormFields.price' min='0'
+              step='.1' type='number' :rules='[rules.pricePositiveValue]'
             />
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="12">
-            <v-textarea
-              auto-grow
-              row-height=1
-              prepend-icon="mdi-comment-text"
-              label="Message"
+            <v-textarea auto-grow row-height=1 counter label="Message"
+              prepend-icon="mdi-comment-text" :rules='[rules.messageMaxLength]'
               hint="Would you like to leave a message for the broadcaster? You can do so here!"
-              counter
-              :rules='[rules.messageMaxLength]'
+              v-model='tipFormFields.message'
             />
           </v-col>
         </v-row>
@@ -81,10 +64,15 @@
 
 <script>
 import InvoiceDialog from '@/components/InvoiceDialog';
+//import { mapActions } from 'vuex'
 export default {
 
   props: {
     displayName: {
+      type: String,
+      required: true
+    },
+    username: {
       type: String,
       required: true
     },
@@ -118,9 +106,17 @@ export default {
   },
 
   methods: {
-    createInvoice: function () {
+    createInvoice () {
       this.$refs.invoiceDialog.invoiceStatus = "loading"
       this.$refs.invoiceDialog.dialog = true
+
+      this.$store.dispatch('payments/getInvoiceFromPayServer', {
+        params: this.tipFormFields
+      }).then((response) => {
+        this.invoiceDialogProps.paymentTabs = response.data
+      }).catch((error) => {
+        console.log(error)
+      })
 
       // TODO: placeholder, make API call to create invoice here
       setTimeout(() => (this.$refs.invoiceDialog.invoiceStatus = 'waitingForPayment'), 1000)
@@ -139,8 +135,18 @@ export default {
         return pattern.test(value) || "Letters and Numbers only, sorry."
       },
       messageMaxLength: value => value.length <= 255 || "No more than 255 characters!",
+      pricePositiveValue: value => value > 0 || "You can't send nothing!"
     },
-    drawer: false,
+
+    tipFormFields: {
+      username: this.username,
+      message: '',
+      price: 1,
+      name: '',
+    },
+    invoiceDialogProps: {
+      paymentTabs: []
+    },
 
   }},
 }

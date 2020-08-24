@@ -22,12 +22,13 @@ const actions = {
   getUserPaymentServer(context, data){
     return api.payments.fetchUserPaymentServer(data.username)
   },
+
+  getInvoiceFromPayServer(context, data){
+    return api.payments.fetchInvoiceFromPaymentServer(data.params)
+  },
 }
 
 const mutations = {
-  getUserPayServerSuccessCommit(state, payload) {
-    state['server_host'] = payload['server_host']
-  },
 }
 
 export default {

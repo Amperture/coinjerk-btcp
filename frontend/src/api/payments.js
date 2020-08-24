@@ -14,3 +14,10 @@ export function fetchUserPaymentServer(username){
     { params: { username: username } }
   )
 }
+
+export function fetchInvoiceFromPaymentServer(params){
+  return axios.post(
+    `${API_URL}/api/payments`,
+    params
+  )
+}

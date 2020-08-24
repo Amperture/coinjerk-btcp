@@ -1,9 +1,9 @@
 <template>
   <v-app id="inspire">
-    <v-container 
-      class="fill-height" 
+    <v-container
+      class="fill-height"
     >
-      <v-row 
+      <v-row
         justify='center'
       >
         <v-col
@@ -11,20 +11,25 @@
         >
 
           <v-skeleton-loader
-            :loading='loading'
+            :loading='showTipFormSkeletonLoader'
             transition='scale-transition'
             justify='start'
             type='card-heading'
           >
             <TipFormCard
               v-bind='formCardProps'
+              v-show='showTipForm'
             />
           </v-skeleton-loader>
           <v-skeleton-loader
-            v-show='loading'
+            v-show='showTipFormSkeletonLoader'
             transition='none'
             justify='end'
             type='card'
+          />
+          <ErrorCard
+            v-show='showErrorCard'
+            :error_code='error_code'
           />
         </v-col>
       </v-row>
@@ -39,46 +44,59 @@
 
 <script>
 import TipFormCard from '@/components/TipFormCard'
+import ErrorCard from '@/components/ErrorCard'
 
   export default {
     props: {
       username: String,
       source: String,
     },
-    
+
     components: {
       TipFormCard,
+      ErrorCard,
     },
 
     created () {
       this.$store.dispatch('payments/getUserPaymentServer', {
         username: this.$route.params.username
       }).then((response) => {
-          console.log(response.data.user.display_name)
           this.formCardProps.displayName = response.data.user.display_name
-          this.loading = false
+          this.tipFormState = 'success'
       }).catch((error) => {
-          // TODO Do something a little more with the error,
-          // maybe redirect to a 404?
-          console.log(error)
-          this.formCardProps.displayName = "user_not_found"
-          this.loading = false
+          console.log(error.data)
+          this.tipFormState = 'error'
+          this.error_code = error.response.data.error_display
       })
 
     },
 
     methods: {
-    }, 
+    },
+
+    computed: {
+        showTipFormSkeletonLoader(){
+            return this.tipFormState === 'loading'
+        },
+        showTipForm(){
+            return this.tipFormState === 'success'
+        },
+        showErrorCard(){
+            return this.tipFormState === 'error'
+        }
+    },
 
     data: () => ({
       drawer: false,
 
-      loading: true,
+      tipFormState: 'loading',
+      error_code: '',
       formCardProps: {
-        displayName: "blahblah",
+        displayName: "",
+        username: "",
         paymentAPIs: ['btcpay']
 
-      }, 
+      },
     }),
   }
 </script>

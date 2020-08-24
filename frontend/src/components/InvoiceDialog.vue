@@ -3,12 +3,9 @@
     v-model='dialog'
     max-width='400'
   >
-    <v-snackbar
+    <v-snackbar absolute bottom multi-line
       :timeout='clipboardNotification.timeout'
       v-model='clipboardNotification.display'
-      multi-line
-      absolute
-      bottom
     >
     "{{ clipboardNotification.data }}"  has been copied to your clipboard.
     </v-snackbar>
@@ -64,54 +61,31 @@
         >
           <v-row>
             <v-col>
-              <QrcodeVue
-                :value='pTab.walletLink'
-                size='320'
-                level='H'
-              ></QrcodeVue>
+              <QrcodeVue :value='pTab.walletLink' size='320' level='H'/>
             </v-col>
           </v-row>
-          <v-row
-            dense
-            v-show='pTab.amount.display'
-          >
+          <v-row dense v-show='pTab.amount.display'>
             <v-col>
-              <v-text-field
-                readonly
-                outlined
-                no-resize
-                rounded
-                dense
-                label='Amount:'
-                @click="clipboardCopy(pTab.amount.value)"
+              <v-text-field readonly outlined no-resize rounded dense
+                label='Amount:' @click="clipboardCopy(pTab.amount.value)"
                 :value='pTab.amount.value + " " + "BTC" '
               ></v-text-field>
             </v-col>
           </v-row>
           <v-row dense>
             <v-col>
-              <v-text-field
-                readonly
-                outlined
-                no-resize
-                rounded
-                dense
-                label='Send To:'
-                @click="clipboardCopy(pTab.address)"
+              <v-text-field readonly outlined no-resize rounded dense
+                label='Send To:' @click="clipboardCopy(pTab.address)"
                 :value="pTab.address"
               ></v-text-field>
             </v-col>
           </v-row>
           <v-row dense>
             <v-col>
-              <v-btn 
-                depressed 
-                large 
-                :href="pTab.walletLink"
-                target="_blank"
+              <v-btn depressed large :href="pTab.walletLink" target="_blank"
                 color="primary"
               >
-                <v-icon left>mdi-open-in-new</v-icon> Open In External Wallet 
+                <v-icon left>mdi-open-in-new</v-icon> Open In External Wallet
               </v-btn>
             </v-col>
           </v-row>
@@ -132,6 +106,10 @@ export default {
   },
 
   props: {
+    paymentTabs: {
+      type: Array,
+      default: function(){return []},
+    }
   },
 
   data: () => ({
@@ -145,32 +123,6 @@ export default {
       timeout: 3000,
       data: '',
     },
-    paymentTabs: [
-      {
-        'id'          : 'btc',
-        'name'        : 'Bitcoin',
-        'icons'       : [ 'mdi-bitcoin', ],
-        'address'     : 'bc1qvcjn825jd5zceml9j727a4fl6v5f8n9ssrryqe',
-        'amount'      : {
-          'value' : '0.0001',
-          'symbol': 'BTC',
-          'display' : true,
-        },
-        'walletLink'  : 'bitcoin:bc1qlf3p6ts3nph6qgewfe4uux8dn4cscte3jyvv7x?amount=0.00010234',
-      },
-      {
-        'id'          : 'btclnd',
-        'name'        : 'Bitcoin (LN)',
-        'icons'       : [ 'mdi-flash-circle' ],
-        'address'     : 'lnbc102340n1p0nvzp9pp5mhgk5ujh5l2ehd2mjzkhulerv36409dhewmyr0g8yeyg0ae0fnksdp82pskjepqw3hjqctdwqszsnmjv3jhygzfgsazq2gcqzpgxqzupsp55h6v8ljcpje655l2wxs03vdva5j4lr6a6w5upm90huddvm00tupq9qy9qsqc4n4xqpp02ee8nsn8ugcekx7axth73u0wuhn2wjnp204qetcz7n8v9pgudtlfuqtyyspm6eqmfxegf5n988tzj39pnvz6n05d53uywcqgrjn2j',
-        'amount'      : {
-          'value' : '0.0001',
-          'symbol': 'BTC',
-          'display' : false,
-        },
-        'walletLink'  : 'lightning:lnbc102340n1p0nvzp9pp5mhgk5ujh5l2ehd2mjzkhulerv36409dhewmyr0g8yeyg0ae0fnksdp82pskjepqw3hjqctdwqszsnmjv3jhygzfgsazq2gcqzpgxqzupsp55h6v8ljcpje655l2wxs03vdva5j4lr6a6w5upm90huddvm00tupq9qy9qsqc4n4xqpp02ee8nsn8ugcekx7axth73u0wuhn2wjnp204qetcz7n8v9pgudtlfuqtyyspm6eqmfxegf5n988tzj39pnvz6n05d53uywcqgrjn2j',
-      },
-    ],
   }),
 
   computed: {

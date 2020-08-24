@@ -84,9 +84,39 @@ def get_payments_connector():
     except NoResultFound:
         return jsonify({
             'success': False,
-            'error': 'user_not_found'
-            })
+            'error': 'user_not_found',
+            'error_display': "There was no user found with that name!"
+            }), 404
     return jsonify({
         'success': True,
         'user': user.tip_page_export()
         })
+
+
+@api.route('/payments', methods=['POST'])
+def get_invoice_from_payments_connector():
+    return jsonify([{
+        'id': 'btc',
+        'name': 'Bitcoin',
+        'icons': ['mdi-bitcoin', ],
+        'address': 'bc1qvcjn825jd5zceml9j727a4fl6v5f8n9ssrryqe',
+        'amount': {
+          'value': '0.0001',
+          'symbol': 'BTC',
+          'display': True,
+        },
+        'walletLink': 'bitcoin:bc1qlf3p6ts3nph6qgewfe4uux8dn4cscte3jyvv7x?amount=0.00010234',
+      },
+      {
+        'id': 'btclnd',
+        'name': 'Bitcoin (LN)',
+        'icons': ['mdi-flash-circle'],
+        'address': 'lnbc102340n1p0nvzp9pp5mhgk5ujh5l2ehd2mjzkhulerv36409dhewmyr0g8yeyg0ae0fnksdp82pskjepqw3hjqctdwqszsnmjv3jhygzfgsazq2gcqzpgxqzupsp55h6v8ljcpje655l2wxs03vdva5j4lr6a6w5upm90huddvm00tupq9qy9qsqc4n4xqpp02ee8nsn8ugcekx7axth73u0wuhn2wjnp204qetcz7n8v9pgudtlfuqtyyspm6eqmfxegf5n988tzj39pnvz6n05d53uywcqgrjn2j',
+        'amount': {
+          'value': '0.0001',
+          'symbol': 'BTC',
+          'display': False,
+        },
+        'walletLink': 'lightning:lnbc102340n1p0nvzp9pp5mhgk5ujh5l2ehd2mjzkhulerv36409dhewmyr0g8yeyg0ae0fnksdp82pskjepqw3hjqctdwqszsnmjv3jhygzfgsazq2gcqzpgxqzupsp55h6v8ljcpje655l2wxs03vdva5j4lr6a6w5upm90huddvm00tupq9qy9qsqc4n4xqpp02ee8nsn8ugcekx7axth73u0wuhn2wjnp204qetcz7n8v9pgudtlfuqtyyspm6eqmfxegf5n988tzj39pnvz6n05d53uywcqgrjn2j',
+      },
+    ],)

@@ -47,6 +47,7 @@ class User(db.Model):
 
     def tip_page_export(self):
         exp = {
+                'username': self.username,
                 'display_name': self.username,
                 }
         return exp
