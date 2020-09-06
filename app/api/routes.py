@@ -5,7 +5,6 @@ from app.api import api
 from app.decorators import token_required
 from app.models import BTCPayClientConnector, StreamElementsConnector, User
 from sqlalchemy.orm.exc import NoResultFound
-
 from btcpay import BTCPayClient
 
 
@@ -74,13 +73,12 @@ def get_payments_connector():
     data = request.args
     try:
         username = data['username']
+        user = User.query.filter_by(username=username).one()
     except KeyError:
         return jsonify({
             'success': False,
             'error': 'invalid_form'
-            })
-    try:
-        user = User.query.filter_by(username=username).one()
+            }), 400
     except NoResultFound:
         return jsonify({
             'success': False,
@@ -93,30 +91,81 @@ def get_payments_connector():
         })
 
 
+def extract_non_none_value_from_dict(data):
+    for value in data.values():
+        if value is not None:
+            return value
+
+
+def process_btcpayserver_invoice_for_export(invoice):
+
+    # TODO: These need to be programmatically controlled somehow.
+    CRYPTO_NAMES = {
+            'BTCLike': 'Bitcoin',
+            'LightningLike': 'Bitcoin (LN)'
+            }
+    CRYPTO_ICONS = {
+            'BTCLike': ['mdi-bitcoin', ],
+            'LightningLike': ['mdi-flash-circle', ],
+            }
+    CRYPTO_DISPLAY = {
+            'BTCLike': True,
+            'LightningLike': False,
+            }
+
+    export_data = []
+    for crypto_info in invoice['cryptoInfo']:
+        export_data.append({
+            'id': crypto_info['address'],
+            'name': CRYPTO_NAMES[crypto_info['paymentType']],
+            'icons': CRYPTO_ICONS[crypto_info['paymentType']],
+            'address': crypto_info['address'],
+            'amount': {
+                'value': crypto_info['totalDue'],
+                'symbol': 'BTC',
+                'display': CRYPTO_DISPLAY[crypto_info['paymentType']],
+            },
+            'walletLink': extract_non_none_value_from_dict(
+                crypto_info['paymentUrls']),
+            })
+    return export_data
+
+
 @api.route('/payments', methods=['POST'])
 def get_invoice_from_payments_connector():
-    return jsonify([{
-        'id': 'btc',
-        'name': 'Bitcoin',
-        'icons': ['mdi-bitcoin', ],
-        'address': 'bc1qvcjn825jd5zceml9j727a4fl6v5f8n9ssrryqe',
-        'amount': {
-          'value': '0.0001',
-          'symbol': 'BTC',
-          'display': True,
-        },
-        'walletLink': 'bitcoin:bc1qlf3p6ts3nph6qgewfe4uux8dn4cscte3jyvv7x?amount=0.00010234',
-      },
-      {
-        'id': 'btclnd',
-        'name': 'Bitcoin (LN)',
-        'icons': ['mdi-flash-circle'],
-        'address': 'lnbc102340n1p0nvzp9pp5mhgk5ujh5l2ehd2mjzkhulerv36409dhewmyr0g8yeyg0ae0fnksdp82pskjepqw3hjqctdwqszsnmjv3jhygzfgsazq2gcqzpgxqzupsp55h6v8ljcpje655l2wxs03vdva5j4lr6a6w5upm90huddvm00tupq9qy9qsqc4n4xqpp02ee8nsn8ugcekx7axth73u0wuhn2wjnp204qetcz7n8v9pgudtlfuqtyyspm6eqmfxegf5n988tzj39pnvz6n05d53uywcqgrjn2j',
-        'amount': {
-          'value': '0.0001',
-          'symbol': 'BTC',
-          'display': False,
-        },
-        'walletLink': 'lightning:lnbc102340n1p0nvzp9pp5mhgk5ujh5l2ehd2mjzkhulerv36409dhewmyr0g8yeyg0ae0fnksdp82pskjepqw3hjqctdwqszsnmjv3jhygzfgsazq2gcqzpgxqzupsp55h6v8ljcpje655l2wxs03vdva5j4lr6a6w5upm90huddvm00tupq9qy9qsqc4n4xqpp02ee8nsn8ugcekx7axth73u0wuhn2wjnp204qetcz7n8v9pgudtlfuqtyyspm6eqmfxegf5n988tzj39pnvz6n05d53uywcqgrjn2j',
-      },
-    ],)
+    form = request.get_json()
+    print(form)
+    try:
+        username = form['username']
+        price = form['price']
+        currency = form['currency']
+    except KeyError:
+        return jsonify({
+            'success': False,
+            'error': 'invalid_form'
+            }), 400
+    try:
+        user = User.query.filter_by(username=username).one()
+        pay_client = user.pay_client()
+    except NoResultFound:
+        return jsonify({
+            'success': False,
+            'error': 'user_not_found',
+            'error_display': "There was no user found with that name!"
+            }), 404
+
+    raw_invoice = pay_client.create_invoice({
+        'price': price,
+        'currency': currency.upper()
+        })
+    export_invoice = process_btcpayserver_invoice_for_export(raw_invoice)
+
+    return jsonify(export_invoice)
+
+
+@api.route('/payments_notify', methods=['POST'])
+def btcpayserver_notification():
+    form = request.get_json()
+    from pprint import pprint
+    pprint(form)
+    return jsonify({'status': 'ACK'}), 200

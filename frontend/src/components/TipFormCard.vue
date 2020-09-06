@@ -26,7 +26,7 @@
         </v-row>
         <v-row>
           <v-col cols="5">
-            <v-select v-model='selectedCurrency' :items='currencies'
+            <v-select v-model='tipFormFields.currency' :items='currencies'
               label="Denomination" prepend-icon='mdi-currency-usd'
               />
           </v-col>
@@ -110,6 +110,8 @@ export default {
       this.$refs.invoiceDialog.invoiceStatus = "loading"
       this.$refs.invoiceDialog.dialog = true
 
+      console.log(this.tipFormFields)
+
       this.$store.dispatch('payments/getInvoiceFromPayServer', {
         params: this.tipFormFields
       }).then((response) => {
@@ -125,7 +127,6 @@ export default {
   },
 
   data: function() { return {
-    selectedCurrency: this.currencies[0],
 
     rules: {
       required: value => !!value || 'This field is required!',
@@ -139,11 +140,13 @@ export default {
     },
 
     tipFormFields: {
+      currency: this.currencies[0],
       username: this.username,
       message: '',
       price: 1,
       name: '',
     },
+
     invoiceDialogProps: {
       paymentTabs: []
     },

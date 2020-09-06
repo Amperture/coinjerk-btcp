@@ -1,11 +1,11 @@
-from app import db, bcrypt  # noqa: F401
-import enum
+from app import db, bcrypt
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True)
+    display_name = db.Column(db.String(64))
     hashed_password = db.Column(db.String(64), nullable=False)
 
     invoices = db.relationship(
@@ -46,9 +46,14 @@ class User(db.Model):
         return user
 
     def tip_page_export(self):
+        if self.display_name is not None:
+            display = self.display_name
+        else:
+            display = self.username
+
         exp = {
                 'username': self.username,
-                'display_name': self.username,
+                'display_name': display,
                 }
         return exp
 
@@ -63,52 +68,3 @@ class User(db.Model):
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.hashed_password, password)
-
-
-class InvoiceStatus(enum.Enum):
-    UNPAID = 0
-    PAID = 1
-    EXPIRED = 2
-
-
-class Invoice(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-    # status holds valid values "paid", "unpaid", "expired"
-    status = db.Column(db.Enum(InvoiceStatus))
-    btcpay_invoice_id = db.Column(db.String(64))
-
-    message = db.Column(db.String(255))
-    email = db.Column(db.String(255))
-    username = db.Column(db.String(255), default="Anonymous")
-
-    user_id = db.Column(
-            db.Integer, db.ForeignKey('user.id'), nullable=False
-            )
-    btcp_client_connector_id = db.Column(
-            db.Integer,
-            db.ForeignKey('btc_pay_client_connector.id'),
-            nullable=False
-            )
-
-
-class BTCPayClientConnector(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-    client = db.Column(db.PickleType)
-    user_id = db.Column(
-            db.Integer, db.ForeignKey('user.id')
-            )
-    invoices = db.relationship(
-            'Invoice',
-            backref='btcp_client_connector',
-            lazy=True,
-            uselist=False,
-            )
-
-
-class StreamElementsConnector(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    jwt = db.Column(db.String(1024))
-    channel_id = db.Column(db.String(64))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

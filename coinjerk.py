@@ -10,4 +10,4 @@ def make_shell_context():
             'db': db,
             'User': User,
             'BTCPayClientConnector': BTCPayClientConnector
-        }
+            }

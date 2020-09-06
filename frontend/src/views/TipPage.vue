@@ -62,6 +62,7 @@ import ErrorCard from '@/components/ErrorCard'
         username: this.$route.params.username
       }).then((response) => {
           this.formCardProps.displayName = response.data.user.display_name
+          this.formCardProps.username = response.data.user.username
           this.tipFormState = 'success'
       }).catch((error) => {
           console.log(error.data)
