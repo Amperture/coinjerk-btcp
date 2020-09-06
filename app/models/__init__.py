@@ -1,3 +1,3 @@
 from .user import User
-from .invoice import Invoice
+from .invoice import Invoice, InvoiceStatus
 from .models import *

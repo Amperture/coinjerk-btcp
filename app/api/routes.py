@@ -3,9 +3,16 @@ from flask import jsonify, request
 from app import db
 from app.api import api
 from app.decorators import token_required
-from app.models import BTCPayClientConnector, StreamElementsConnector, User
+from app.models import (
+        BTCPayClientConnector, StreamElementsConnector, User, Invoice,
+        InvoiceStatus
+        )
 from sqlalchemy.orm.exc import NoResultFound
 from btcpay import BTCPayClient
+
+import os
+import requests
+import json
 
 
 @api.route('/connectors/btcpay', methods=['GET'])
@@ -135,6 +142,8 @@ def process_btcpayserver_invoice_for_export(invoice):
 def get_invoice_from_payments_connector():
     form = request.get_json()
     print(form)
+    message = form.get('message', '')
+    tipper_name = form.get('name', 'Anonymous')
     try:
         username = form['username']
         price = form['price']
@@ -156,11 +165,54 @@ def get_invoice_from_payments_connector():
 
     raw_invoice = pay_client.create_invoice({
         'price': price,
-        'currency': currency.upper()
+        'currency': currency.upper(),
+        'notificationURL': (f'{os.getenv("FLASK_SERVER_URL")}'
+                            'api/payments_notify')
         })
+
+    db_invoice = Invoice(
+            status=InvoiceStatus.UNPAID,
+            btcpay_invoice_id=raw_invoice['id'],
+            raw_invoice=json.dumps(raw_invoice),
+            btcp_client_connector_id=user.btcp_client_connector.id,
+            message=message,
+            username=tipper_name,
+            user_id=user.id,
+            )
+
+    db.session.add(db_invoice)
+    db.session.commit()
+
     export_invoice = process_btcpayserver_invoice_for_export(raw_invoice)
 
     return jsonify(export_invoice)
+
+
+def notify_streamelements(invoice):
+    import json
+    user_id = os.getenv('AMP_USER_ID')
+    token = os.getenv('AMP_SE_TOKEN')
+
+    url = f"https://api.streamelements.com/kappa/v2/tips/{user_id}/"
+    headers = {
+            'Authorization': f"Bearer {token}",
+            'accept': "application/json",
+            'content-type': "application/json"
+            }
+    data = {
+            'user': {
+                'email': "amp@amperture.com",
+                'username': invoice.username
+                },
+            'provider': "CoinJerk",
+            'message': invoice.message,
+            'amount': json.loads(invoice.raw_invoice)['price'],
+            'currency': json.loads(invoice.raw_invoice)['currency'],
+            'imported': True
+            }
+
+    response = requests.post(url, headers=headers, json=data)
+    print(response.json())
 
 
 @api.route('/payments_notify', methods=['POST'])
@@ -168,4 +220,7 @@ def btcpayserver_notification():
     form = request.get_json()
     from pprint import pprint
     pprint(form)
+    if form['status'] == 'confirmed':
+        invoice = Invoice.query.filter_by(btcpay_invoice_id=form['id']).one()
+        notify_streamelements(invoice)
     return jsonify({'status': 'ACK'}), 200
