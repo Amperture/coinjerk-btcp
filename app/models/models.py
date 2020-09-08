@@ -16,10 +16,3 @@ class BTCPayClientConnector(db.Model):
             lazy=True,
             uselist=False,
             )
-
-
-class StreamElementsConnector(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    jwt = db.Column(db.String(1024))
-    channel_id = db.Column(db.String(64))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

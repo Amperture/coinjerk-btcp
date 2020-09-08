@@ -86,7 +86,7 @@ export default {
         return [
           {
             text: 'Satoshis',
-            value: "sats",
+            value: "satoshis",
           },
           {
             text: 'Bitcoins (BTC)',
@@ -140,7 +140,7 @@ export default {
     },
 
     tipFormFields: {
-      currency: this.currencies[0],
+      currency: this.currencies[0].value,
       username: this.username,
       message: '',
       price: 1,

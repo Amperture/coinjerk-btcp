@@ -14,15 +14,15 @@ class User(db.Model):
             lazy=True
             )
 
-    btcp_client_connector = db.relationship(
+    payment_processor = db.relationship(
             'BTCPayClientConnector',
             backref='user',
             lazy=True,
             uselist=False,
             )
 
-    streamelements_connector = db.relationship(
-            'StreamElementsConnector',
+    alert_service_notifier = db.relationship(
+            'AlertServiceNotifierClient',
             backref='user',
             lazy=True,
             uselist=False,
@@ -61,7 +61,7 @@ class User(db.Model):
         self.hashed_password = bcrypt.generate_password_hash(password)
 
     def pay_client(self):
-        return self.btcp_client_connector.client
+        return self.payment_processor.client
 
     def hash_password(password):
         return bcrypt.generate_password_hash(password)
