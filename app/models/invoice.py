@@ -14,7 +14,7 @@ class Invoice(db.Model):
 
     # status holds valid values "paid", "unpaid", "expired"
     status = db.Column(db.Enum(InvoiceStatus))
-    btcpay_invoice_id = db.Column(db.String(64), nullable=False, unique=True)
+    invoice_unique_id = db.Column(db.String(64), nullable=False, unique=True)
 
     message = db.Column(db.String(255))
     email = db.Column(db.String(255))
@@ -26,8 +26,8 @@ class Invoice(db.Model):
             db.Integer, db.ForeignKey('user.id'), nullable=False
             )
 
-    btcp_client_connector_id = db.Column(
+    payment_processor_id = db.Column(
             db.Integer,
-            db.ForeignKey('btc_pay_client_connector.id'),
+            db.ForeignKey('payment_processor.id'),
             nullable=False
             )

@@ -1,5 +1,5 @@
 from app import create_app, db  # noqa: F401
-from app.models import User, BTCPayClientConnector, AlertServiceNotifierClient
+from app.models import User, PaymentProcessor, AlertServiceNotifierClient
 
 app = create_app()
 
@@ -10,5 +10,5 @@ def make_shell_context():
             'db': db,
             'User': User,
             'AlertServiceNotifierClient': AlertServiceNotifierClient,
-            'BTCPayClientConnector': BTCPayClientConnector
+            'PaymentProcessor': PaymentProcessor
             }

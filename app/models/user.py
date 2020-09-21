@@ -15,7 +15,7 @@ class User(db.Model):
             )
 
     payment_processor = db.relationship(
-            'BTCPayClientConnector',
+            'PaymentProcessor',
             backref='user',
             lazy=True,
             uselist=False,

@@ -37,7 +37,7 @@
                         v-for='pTab in paymentTabs'
                         >
               <v-row>
-                <v-col>
+                <v-col class='qrbox py-6 my-2 px-0'>
                   <QrcodeVue :value='pTab.walletLink' size='320' level='H'/>
                 </v-col>
               </v-row>
@@ -50,7 +50,7 @@
                                 />
                 </v-col>
               </v-row>
-              <v-row dense>
+              <v-row >
                 <v-col>
                   <v-text-field readonly outlined no-resize rounded dense
                                 label='Send To:'
@@ -134,5 +134,13 @@ export default {
 <style>
 .v-progress-circular {
   margin: 1rem
+}
+.qrborder{
+  /*
+  border: 10px solid white;
+  */
+}
+.qrbox{
+  background: white;
 }
 </style>

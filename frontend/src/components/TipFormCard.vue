@@ -86,7 +86,7 @@ export default {
         return [
           {
             text: 'Satoshis',
-            value: "satoshis",
+            value: "sats",
           },
           {
             text: 'Bitcoins (BTC)',
@@ -107,6 +107,7 @@ export default {
 
   methods: {
     createInvoice () {
+      this.invoiceDialogProps.paymentTabs = []
       this.$refs.invoiceDialog.invoiceStatus = "loading"
       this.$refs.invoiceDialog.dialog = true
 
@@ -116,13 +117,10 @@ export default {
         params: this.tipFormFields
       }).then((response) => {
         this.invoiceDialogProps.paymentTabs = response.data
+        this.$refs.invoiceDialog.invoiceStatus = 'waitingForPayment'
       }).catch((error) => {
         console.log(error)
       })
-
-      // TODO: placeholder, make API call to create invoice here
-      setTimeout(() => (this.$refs.invoiceDialog.invoiceStatus = 'waitingForPayment'), 1000)
-      // ENDTODO
     },
   },
 
