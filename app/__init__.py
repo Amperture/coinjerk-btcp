@@ -31,6 +31,9 @@ def create_app():
     from app.api import api
     app.register_blueprint(api, url_prefix='/api')
 
+    from app.callbacks import callbacks
+    app.register_blueprint(callbacks, url_prefix='/callbacks')
+
     return app
 
 
