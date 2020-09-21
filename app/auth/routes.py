@@ -56,3 +56,10 @@ def register():
         'token': token.decode('UTF-8'),
         'authenticated': True
         })
+
+
+@auth.route("/reg_enabled", methods=['GET'])
+def auth_reg_enabled():
+    return jsonify({
+        'enabled': current_app.config['ENABLE_USER_REGISTRATION']
+        })
