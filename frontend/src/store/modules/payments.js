@@ -10,7 +10,7 @@ const getters = {
 const actions = {
 
   btcpaySetupAction(context, data){
-    return api.btcpay.btcPayServerSetup(data)
+    return api.payments.btcPayServerSetup(data)
       .then(response => {
         context.commit('loginSuccess', response.data.token)
       })
@@ -19,21 +19,16 @@ const actions = {
       })
   },
 
-  getBTCPayServer(context){
-    return api.btcpay.fetchUserPayServer()
-      .then(response => {
-        context.commit('getUserPayServerSuccessCommit', response.data)
-      })
-      .catch(error => {
-        console.log(error.data) // eslint-disable-line no-console
-      })
+  getUserPaymentServer(context, data){
+    return api.payments.fetchUserPaymentServer(data.username)
+  },
+
+  getInvoiceFromPayServer(context, data){
+    return api.payments.fetchInvoiceFromPaymentServer(data.params)
   },
 }
 
 const mutations = {
-  getUserPayServerSuccessCommit(state, payload) {
-    state['server_host'] = payload['server_host']
-  },
 }
 
 export default {

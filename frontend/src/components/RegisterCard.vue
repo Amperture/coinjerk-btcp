@@ -86,10 +86,12 @@ export default {
             password: this.password,
           })
           .then((data) => {
+            console.log(data)
             this.loading = false
             this.$router.push('/dashboard')
           })
           .catch((error) => {
+            console.log(error)
             this.loading = false
           })
       } 
