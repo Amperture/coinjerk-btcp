@@ -14,8 +14,10 @@ export default {
   name: 'App',
   created() {
     this.$store.dispatch('auth/getRegistrationEnabled')
+    /*
     console.log('%cIs Registration Enabled?',
       'color: green; background: black; font-weight:bold')
+    */
   },
   components: {
     HeaderBar,

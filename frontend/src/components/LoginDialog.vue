@@ -9,7 +9,7 @@
         <v-btn
           class='mx-4'
           v-on="on"
-          dark
+          color='accent'
         >
         Get Started!
         </v-btn>
