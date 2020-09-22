@@ -32,14 +32,14 @@ class User(db.Model):
         return f'<User {self.username}>'
 
     @classmethod
-    def authenticate(klass, **kwargs):
+    def authenticate(cls, **kwargs):
         username = kwargs.get('username')
         password = kwargs.get('password')
 
         if not username or not password:
             return None
 
-        user = klass.query.filter_by(username=username).first()
+        user = cls.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
             return None
 
