@@ -29,7 +29,12 @@ class User(db.Model):
             )
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        pp_type = type(self.payment_processor.client)
+        return (f"<User {self.username}>:\r\n"
+                f"\temail: {self.email}, \r\n"
+                f"\tdisplay_name: {self.display_name}, \r\n"
+                f"\tpayment_processor: {pp_type}\r\n"
+                )
 
     @classmethod
     def authenticate(cls, **kwargs):
