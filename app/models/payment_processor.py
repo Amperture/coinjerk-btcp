@@ -22,12 +22,13 @@ class PaymentProcessor(db.Model):
             )
 
     def create_invoice(self, invoice_payload):
+        print(f'{os.getenv("FLASK_SERVER_URL")}callbacks/btcpay')
         raw_invoice = self.client.create_invoice({
             'price': invoice_payload['price'],
             'memo': invoice_payload['message'],
             'currency': invoice_payload['currency'],
             'notificationURL': (f'{os.getenv("FLASK_SERVER_URL")}'
-                                'api/payments_notify')
+                                'callbacks/btcpay')
             })
 
         db_invoice = Invoice(

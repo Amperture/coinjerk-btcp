@@ -22,7 +22,7 @@ def login():
     token = jwt.encode({
         'sub': user.id,
         'iat': datetime.utcnow(),
-        'exp': datetime.utcnow() + timedelta(minutes=30)
+        'exp': datetime.utcnow() + timedelta(hours=24)
         }, current_app.config['SECRET_KEY'])
 
     return jsonify({
@@ -49,7 +49,7 @@ def register():
     token = jwt.encode({
         'sub': user.id,
         'iat': datetime.utcnow(),
-        'exp': datetime.utcnow() + timedelta(minutes=30)
+        'exp': datetime.utcnow() + timedelta(hours=24)
         }, current_app.config['SECRET_KEY'])
 
     return jsonify({
