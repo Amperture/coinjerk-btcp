@@ -21,8 +21,12 @@ let router = new Router({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
-      meta: {
-        requires_auth: true
+      beforeEnter(to, from, next){
+        if(!mapGetters('auth', ['isAuthenticated'])){
+          next('/')
+        } else {
+          next()
+        }
       }
     },
     {
@@ -40,20 +44,6 @@ let router = new Router({
       component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
     }
   ]
-})
-
-router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requires_auth)) {
-    if(!mapGetters(['isAuthenticated'])){
-      next({
-        path: '/',
-      })
-    } else {
-      next()
-    }
-  } else {
-    next()
-  }
 })
 
 export default router

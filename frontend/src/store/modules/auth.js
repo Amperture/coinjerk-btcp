@@ -10,7 +10,15 @@ const state = {
 
 const getters = {
   isAuthenticated(){
-    return !!state.token
+    console.log("auth called!")
+    if(state.token == '' || state.token.split('.').length < 3){
+      return false
+    } else {
+      const data = JSON.parse(atob(state.token.split('.')[1]))
+      const exp = new Date(data.exp * 1000)
+      const now = new Date()
+      return now < exp
+    }
   },
   authStatus(){
     state.status 
@@ -19,7 +27,6 @@ const getters = {
 
 const actions = {
   getUserStatus(){
-    console.log("called!")
     return getters.isAuthenticated
   },
 
