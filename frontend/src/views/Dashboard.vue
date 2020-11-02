@@ -1,23 +1,43 @@
 <template>
   <div>
     <v-container>
-      <BTCPayConnectorChecker/>
-      <StreamElementsConnectorChecker/>
+      <v-row>
+        <v-col>
+          <ProfileSetupCard/>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
+          sm='12'
+          md='6'
+        >
+          <AlertsSetupCard
+          />
+        </v-col>
+        <v-col
+          sm='12'
+          md='6'
+        >
+          <PaymentsSetupCard/>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
 
 <script>
-import BTCPayConnectorChecker from '@/components/BTCPayConnectorChecker'
-import StreamElementsConnectorChecker from '@/components/StreamElementsConnectorChecker'
+import ProfileSetupCard from '@/components/ProfileSetupCard'
+import AlertsSetupCard from '@/components/AlertsSetupCard'
+import PaymentsSetupCard from '@/components/PaymentsSetupCard'
 
 export default {
     name: 'dashboard',
 
     components: {
-        BTCPayConnectorChecker, 
-        StreamElementsConnectorChecker 
-    }, 
+      AlertsSetupCard,
+      PaymentsSetupCard,
+      ProfileSetupCard,
+    },
 
     data: () => ({
     }),

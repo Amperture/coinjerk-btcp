@@ -4,21 +4,38 @@ import api from '@/api'
 const state = {
   token: localStorage.getItem('user-token') || '',
   status: '',
-  user: {}
+  user: {},
+  registration_enabled: false,
 }
 
 const getters = {
-  isAuthenticated: state => !!state.token,
-  authStatus: state => state.status,
+  isAuthenticated(){
+    console.log("auth called!")
+    if(state.token == '' || state.token.split('.').length < 3){
+      return false
+    } else {
+      const data = JSON.parse(atob(state.token.split('.')[1]))
+      const exp = new Date(data.exp * 1000)
+      const now = new Date()
+      return now < exp
+    }
+  },
+  authStatus(){
+    state.status 
+  }, 
 }
 
 const actions = {
+  getUserStatus(){
+    return getters.isAuthenticated
+  },
 
   login(context, payload){
     context.commit('loginLoading')
     return api.auth.userLogin(payload)
       .then(response => {
-        axios.defaults.headers.common['Authorization'] = response.data.token
+        axios.defaults.headers.common['Authorization'] =
+          response.data.token
         context.commit('loginSuccess', response.data.token)
       })
       .catch(error => {
@@ -31,7 +48,8 @@ const actions = {
     context.commit('loginLoading')
     return api.auth.userRegister(data)
       .then(response => {
-        axios.defaults.headers.common['Authorization'] = response.data.token
+        axios.defaults.headers.common['Authorization'] =
+          response.data.token
         context.commit('loginSuccess', response.data.token)
       })
       .catch(error => {
@@ -43,6 +61,7 @@ const actions = {
   getUser(context){
     return api.auth.fetchUser()
       .then(response => {
+        console.log(response.data)
         context.commit('getUserSuccessCommit', response.data)
       })
       .catch(error => {
@@ -51,11 +70,25 @@ const actions = {
       })
   },
 
+  getRegistrationEnabled(context){
+    return api.auth.fetchRegistrationEnabled()
+      .then(response => {
+        context.commit('setRegisterEnabled', response.data)
+      })
+      .catch(error => {
+        console.log(error.data)
+      })
+  },
+
 }
 
 const mutations = {
   getUserSuccess(state, payload) {
     state.user = payload
+  },
+
+  setRegisterEnabled(state, payload) {
+    state.registration_enabled = payload['enabled']
   },
 
   loginLoading(state) {
@@ -80,5 +113,5 @@ export default {
   state,
   getters,
   actions,
-  mutations 
+  mutations
 }

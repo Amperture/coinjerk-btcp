@@ -2,109 +2,102 @@
   <v-app id="inspire">
     <v-container
       class="fill-height"
-      fluid
     >
       <v-row
-        align="center"
-        justify="center"
+        justify='center'
       >
-        <v-col class="text-center">
-          <v-card
-            max-width="800"
-            class='mx-auto'>
-            <v-img
-              src="https://coinjerk.com/static/img/tip/default_header.jpg"
-            >
-              <v-card-title
-                class="title align-end fill-height tip-username"
-                >Tip {{ username }}
-              </v-card-title>
-            </v-img>
-            <v-card-text>
-              <v-form>
-                <v-row>
-                  <v-col cols="8">
-                    <v-text-field
-                      label="Name"
-                      name="login"
-                      prepend-icon="mdi-account-box"
-                      type="text"
-                      clearable
-                      hint="Optional. Twitch or Twitter name preferred."
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-select
-                      :items="currencies"
-                      label="Currency/Denomination"
-                      prepend-icon="mdi-currency-usd"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row>
-                  Choose Amount Here
-                </v-row>
-                <v-row>
-                  <v-col cols="12"
-                  >
-                    <v-textarea
-                      auto-grow="true"
-                      row-height=1
-                      prepend-icon="mdi-comment-text"
-                      label="Message"
-                      hint="Would you like to leave a message for the broadcaster? You can do so here!"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-btn 
-                    color="blue darken-1" 
-                    text 
-                    @click="invoiceModal"
-                  >Login</v-btn>
-                </v-row>
-              </v-form>
-            </v-card-text>
-          </v-card>
+        <v-col
+          cols=6
+        >
+
+          <v-skeleton-loader
+            :loading='showTipFormSkeletonLoader'
+            transition='scale-transition'
+            justify='start'
+            type='card-heading'
+          >
+            <TipFormCard
+              v-bind='formCardProps'
+              v-show='showTipForm'
+            />
+          </v-skeleton-loader>
+          <v-skeleton-loader
+            v-show='showTipFormSkeletonLoader'
+            transition='none'
+            justify='end'
+            type='card'
+          />
+          <ErrorCard
+            v-show='showErrorCard'
+            :error_code='error_code'
+          />
         </v-col>
       </v-row>
     </v-container>
     <v-footer
-      color="indigo"
       app
     >
-      <span class="white--text">&copy; 2019</span>
+      <span>&copy; Amperture 2020</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
+import TipFormCard from '@/components/TipFormCard'
+import ErrorCard from '@/components/ErrorCard'
+
   export default {
     props: {
       username: String,
       source: String,
     },
 
+    components: {
+      TipFormCard,
+      ErrorCard,
+    },
+
     created () {
-      let btcPayModalScript = document.createElement('script')
-      btcPayModalScript.setAttribute('src', "https://btcpay960873.lndyn.com/modal/btcpay.js")
-      document.head.appendChild(btcPayModalScript)
+      this.$store.dispatch('payments/getUserPaymentServer', {
+        username: this.$route.params.username
+      }).then((response) => {
+          this.formCardProps.displayName = response.data.user.display_name
+          this.formCardProps.username = response.data.user.username
+          this.tipFormState = 'success'
+      }).catch((error) => {
+          console.log(error.data)
+          this.tipFormState = 'error'
+          this.error_code = error.response.data.error_display
+      })
+
     },
 
     methods: {
-      invoiceModal(){
-        window.btcpay.showInvoice('9LemhFi3Qzdekorw85PpHv')
-      },
+    },
 
-    }, 
+    computed: {
+        showTipFormSkeletonLoader(){
+            return this.tipFormState === 'loading'
+        },
+        showTipForm(){
+            return this.tipFormState === 'success'
+        },
+        showErrorCard(){
+            return this.tipFormState === 'error'
+        }
+    },
 
     data: () => ({
       drawer: false,
-      currencies: [
-        'USD',
-        'BTC',
-        'satoshis'
-      ]
+
+      tipFormState: 'loading',
+      error_code: '',
+      formCardProps: {
+        displayName: "",
+        username: "",
+        paymentAPIs: ['btcpay']
+
+      },
     }),
   }
 </script>

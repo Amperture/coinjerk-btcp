@@ -66,8 +66,6 @@
     </v-navigation-drawer>
     <v-app-bar
       clipped-left
-      dark
-      color="accent"
       app
       >
       <v-app-bar-nav-icon
@@ -84,6 +82,7 @@
         color="primary"
         prepend-icon="mdi-brightness-7"
         append-icon="mdi-brightness-3"
+        @click.stop='toggleDarkMode'
         hide-details
         ></v-switch>
       <LoginDialog
@@ -109,6 +108,14 @@ export default {
     ...mapGetters('auth',
       ['isAuthenticated'])
   }, 
+
+  methods: {
+    toggleDarkMode(){
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      localStorage.setItem('theme', this.$vuetify.theme.dark ? 'dark' :
+        'light')
+    }
+  },
 
   data: () => ({
     navDrawer: {

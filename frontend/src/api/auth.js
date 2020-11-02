@@ -16,6 +16,12 @@ export function userRegister(newUserData) {
   )
 }
 
+export function fetchRegistrationEnabled() {
+  return axios.get(
+    `${API_URL}/auth/reg_enabled`,
+  )
+}
+
 export function fetchUser(){
   return axios.get(
     `${API_URL}/user`,

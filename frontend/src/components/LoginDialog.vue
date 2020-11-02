@@ -9,12 +9,11 @@
         <v-btn
           class='mx-4'
           v-on="on"
-          dark
+          color='accent'
         >
         Get Started!
         </v-btn>
       </template>
-
       <v-card>
         <v-tabs
           v-model="tab"
@@ -24,21 +23,18 @@
           grow
         >
           <v-tabs-slider></v-tabs-slider>
-
           <v-tab
             key="login"
             href="#tab-login"
           >
             Login
           </v-tab>
-
           <v-tab
             key="signup"
             href="#tab-signup"
           >
             Signup
           </v-tab>
-
           <v-tab-item
             key="login"
             value="tab-login"
