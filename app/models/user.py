@@ -29,17 +29,22 @@ class User(db.Model):
             )
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        pp_type = type(self.payment_processor.client)
+        return (f"<User {self.username}>:\r\n"
+                f"\temail: {self.email}, \r\n"
+                f"\tdisplay_name: {self.display_name}, \r\n"
+                f"\tpayment_processor: {pp_type}\r\n"
+                )
 
     @classmethod
-    def authenticate(klass, **kwargs):
+    def authenticate(cls, **kwargs):
         username = kwargs.get('username')
         password = kwargs.get('password')
 
         if not username or not password:
             return None
 
-        user = klass.query.filter_by(username=username).first()
+        user = cls.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
             return None
 

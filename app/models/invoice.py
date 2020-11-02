@@ -31,3 +31,15 @@ class Invoice(db.Model):
             db.ForeignKey('payment_processor.id'),
             nullable=False
             )
+
+    fiat_currency = db.Column(
+            db.String(8),
+            default='USD',
+            nullable=False
+            )
+
+    fiat_amount = db.Column(
+            db.Float,
+            nullable=False,
+            default=5.0
+            )

@@ -1,5 +1,5 @@
 from app import db  # noqa: F401
-from app.models import Invoice, InvoiceStatus
+from app.models import Invoice, InvoiceStatus, ExchangeRate
 
 import os
 import json
@@ -22,12 +22,31 @@ class PaymentProcessor(db.Model):
             )
 
     def create_invoice(self, invoice_payload):
+        fiat_currency = 'USD'
+        if invoice_payload['currency'].lower() == 'btc':
+            fiat_amount = ExchangeRate.query.filter_by(
+                    token=fiat_currency.lower(),
+                    ).one().convert_from_bitcoin(
+                            invoice_payload['price']
+                            )
+
+        elif invoice_payload['currency'].lower() == 'sats':
+            fiat_amount = ExchangeRate.query.filter_by(
+                    token=fiat_currency.lower(),
+                    ).one().convert_from_bitcoin(
+                            invoice_payload['price'],
+                            is_sats=True
+                            )
+        else:
+            fiat_amount = invoice_payload['price']
+            fiat_currency = invoice_payload['currency']
+
         raw_invoice = self.client.create_invoice({
             'price': invoice_payload['price'],
             'memo': invoice_payload['message'],
             'currency': invoice_payload['currency'],
             'notificationURL': (f'{os.getenv("FLASK_SERVER_URL")}'
-                                'api/payments_notify')
+                                'callbacks/btcpay')
             })
 
         db_invoice = Invoice(
@@ -38,7 +57,10 @@ class PaymentProcessor(db.Model):
                 message=invoice_payload['message'],
                 username=invoice_payload['tipper_name'],
                 user_id=self.user_id,
+                fiat_amount=fiat_amount,
+                fiat_currency=fiat_currency,
                 )
+
         db.session.add(db_invoice)
         db.session.commit()
         return raw_invoice

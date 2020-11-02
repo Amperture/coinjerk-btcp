@@ -1,9 +1,15 @@
 import axios from 'axios'
 import { API_URL } from '@/api'
 
+export function fetchSetupPaymentsStatus(){
+  return axios.get(
+    `${API_URL}/api/payments/setup`,
+  )
+}
+
 export function paymentProcessSetup(setupData){
   return axios.post(
-    `${API_URL}/api/payments`,
+    `${API_URL}/api/payments/setup`,
     setupData
   )
 }
