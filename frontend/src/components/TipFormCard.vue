@@ -16,7 +16,7 @@
         >
         <v-row>
           <v-col cols="12">
-            <v-text-field label="Name" name="login" type='text' clearable
+            <v-text-field label="Name" name="login" type='text'
               prepend-icon="mdi-account-box"
               hint="Optional. Twitch or Twitter name preferred."
               :rules='[rules.nameMaxLength, rules.nameAlphaNumeric]'
@@ -48,7 +48,6 @@
         <v-row>
           <v-btn
             class='mx-4'
-            v-on='on'
             dark
             @click="createInvoice"
           >

@@ -1,18 +1,16 @@
 from flask import jsonify, request
 
-from app import db
 from app.api import api
 from app.api import utils
 from app.decorators import token_required
 from app.models import (
-        PaymentProcessor, AlertServiceNotifierClient, User,
+        User,
         )
 
 from sqlalchemy.orm.exc import NoResultFound
-from btcpay import BTCPayClient
 
 
-@api.route('/payments/btcpay', methods=['GET'])
+@api.route('/payments/setup', methods=['GET'])
 @token_required
 def payment_processor_get(user):
     if not user.payment_processor:
@@ -25,27 +23,15 @@ def payment_processor_get(user):
           })
 
 
-@api.route('/payments/btcpay', methods=['POST'])
+@api.route('/payments/setup', methods=['POST'])
 @token_required
-def btcpay_connector_post(user):
+def setup_payment_processor(user):
     form = request.get_json()
-    if not form['url'] or not form['code']:
-        return jsonify({
-            "Incomplete Form"
-            }), 400
 
-    client = BTCPayClient.create_client(
-            host=form['url'],
-            code=form['code']
-            )
+    if form.get('onion_service'):
+        form['type'] = form['type']+'-tor'
 
-    con = PaymentProcessor(
-            client=client,
-            user_id=user.id
-            )
-
-    db.session.add(con)
-    db.session.commit()
+    utils.setup_payment_processor(user, form)
     return jsonify({
         'success': True
         })
@@ -71,27 +57,6 @@ def get_payments_connector():
     return jsonify({
         'success': True,
         'user': user.tip_page_export()
-        })
-
-
-@api.route('/connectors/streamelements', methods=['POST'])
-@token_required
-def streamelements_connector_post(user):
-    form = request.get_json()
-    if not form['channelID'] or not form['channelJWT']:
-        return jsonify({
-            "Incomplete Form"
-            }), 400
-
-    con = AlertServiceNotifierClient(
-            jwt=form['channelJWT'],
-            channel_id=form['channelID']
-            )
-
-    db.session.add(con)
-    db.session.commit()
-    return jsonify({
-        'success': True
         })
 
 
@@ -138,7 +103,6 @@ def process_btcpayserver_invoice_for_export(invoice):
 @api.route('/payments', methods=['POST'])
 def get_invoice_from_payments_connector():
     form = request.get_json()
-    # print(form)
     message = form.get('message', '')
     tipper_name = form.get('name', 'Anonymous')
     try:

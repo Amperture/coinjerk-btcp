@@ -14,16 +14,14 @@
         <v-card-text>
           <v-form
             ref="form"
-            v-model="valid"
             lazy-validation
-            >
+          >
             <v-text-field
               v-model="streamelements_credentials.client_id"
               :type="'password'"
               :rules="rules.required"
-              label="StreamElements Client ID"
+              label="StreamElements Account ID"
             ></v-text-field>
-
             <v-text-field
               v-model="streamelements_credentials.jwt_token"
               :type='"password"'

@@ -4,7 +4,7 @@
       Payment Processor Setup
     </v-card-title>
     <v-card-subtitle>
-      Payment Processor: {{ payment_setup_type }}
+      Payment Processor: {{ server_host }}
     </v-card-subtitle>
     <v-card-text>
       <PaymentsSetupBTCPayDialog/>
@@ -21,11 +21,11 @@ export default {
     PaymentsSetupBTCPayDialog,
   },
   computed: mapState({
-    payment_setup_type: state => state.payments.payment_setup_type,
+    server_host: state => state.payments.server_host,
   }),
 
   created () {
-    this.$store.dispatch('alerts/getSetupPaymentProcessor')
+    this.$store.dispatch('payments/getSetupPaymentProcessor')
   }
 }
 </script>
