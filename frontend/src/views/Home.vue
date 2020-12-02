@@ -134,11 +134,6 @@ export default {
         name: 'StreamElements',
         url: 'https://streamelements.com'
       },
-      {
-        avatar: require('@/assets/streamlabs_logo.png'),
-        name: 'StreamLabs',
-        url: 'https://streamlabs.com'
-      },
     ],
 
     supportedPayments: [
@@ -146,11 +141,6 @@ export default {
         avatar: require('@/assets/btcpayserver_logo.png'),
         name: 'BTCPayServer',
         url: 'https://btcpayserver.org'
-      },
-      {
-        avatar: require('@/assets/casanode_logo.png'),
-        name: 'Casa Node',
-        url: 'https://streamlabs.com'
       },
     ],
 
