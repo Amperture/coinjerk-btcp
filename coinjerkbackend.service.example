@@ -1,0 +1,14 @@
+Description=Gunicorn Python CoinJerk Backend Container Server
+After=network.target
+
+[Service]
+User=coinjerk
+Group=www-data
+
+WorkingDirectory=/home/coinjerk/coinjerk-btcp
+Environment="PATH=/home/coinjerk/coinjerk-btcp/venv/bin"
+EnvironmentFile=/home/coinjerk/coinjerk-btcp/.flaskenv
+ExecStart=/home/coinjerk/coinjerk-btcp/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:5000 --access-logfile '-' --error-logfile '-' wsgi:application 
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+example.domain.com {
+        root * /home/coinjerk/coinjerk-btcp/frontend/dist
+        try_files {path} /index.html
+        file_server
+}
+
+api.example.domain.com {
+        reverse_proxy 127.0.0.1:5000 
+}
+

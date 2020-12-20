@@ -1,7 +1,7 @@
 FLASK_ENV=development
 FLASK_APP=coinjerk.py
 
-FLASK_SERVER_URL=http://localhost:5000/
+FLASK_SERVER_URL=http://192.168.0.151:5000/
 FRONTEND_SERVER_URL=http://localhost:8080/
 
 ENABLE_USER_REGISTRATION=True
